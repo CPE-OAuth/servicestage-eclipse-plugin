@@ -55,7 +55,7 @@ The default ServiceStage Preferences should be used (`Window > Preferences > Hua
 
 Now you can create your own application projects, each project in your workspace will have a different set of ServiceStage settings associated with it. These settings will be stored in `servicestage.xml` at the project root. Note: this plugin currently only supports tomcat and node.js applications.
 
-1. Right-click the project and select `Huawei > ServiceStage > Configure`
+1. Right-click the project and select `ServiceStage > Configure`
 1. Fill in the application information
 1. Provide the SWR repo where files will be uploaded before they can be deployed
 1. Select Platform information such as Cluster ID, ELB ID, VPC ID
@@ -67,7 +67,7 @@ Now you can create your own application projects, each project in your workspace
 Once your preferences and application information have been configured, you are ready to deploy your war file.
 
 1. Build your project and generate the war file, if needed
-1. From the Project Explorer, right-click the war file/Node.js project and select `Huawei > ServiceStage > Deploy`
+1. From the Project Explorer, right-click the war file/Node.js project and select `ServiceStage > Deploy`
 1. The deployment process will begin and provide progress information.
 
 The deployment process is as follows:
@@ -82,7 +82,7 @@ If there is an issue with the deployment at any stage, a dialog appears showing 
 
 You can check the status of your application at any time.
 
-1. Right-click the project and select `Huawei > ServiceStage > Status`
+1. Right-click the project and select `ServiceStage > Status`
 
 Build
 -----
