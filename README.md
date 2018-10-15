@@ -29,7 +29,9 @@ Features
 Installation
 ------------
 
-At this moment, the plugin must be installed manually. See [Build](#build) to first obtain the plugin jar file. Once you have the plugin jar, place it in `${ECLIPSE_INSTALLATION}/dropins`. For example, if Eclipse is install in `/opt/eclipse` on your system, then place the plugin jar inside `/opt/eclipse/dropins`. Then restart Eclipse to pickup the changes.
+A pre-built ServiceStage plugin jar can be found under the `servicestage-eclipse-plugin/plugins` folder. If you would like to build the plugin from the ServiceStage plugin source code, see [Build](#build) to first build and obtain the plugin jar file. 
+
+At this moment, the plugin must be installed manually.  Once you have the ServiceStage plugin jar, place it in `${ECLIPSE_INSTALLATION}/dropins`. For example, if Eclipse is install in `/eclipse` on your system, then place the plugin jar inside `/eclipse/dropins`. Then restart Eclipse to pickup the changes.
 
 Usage
 -----
