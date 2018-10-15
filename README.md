@@ -1,5 +1,5 @@
 <!--
-Copyright 2016 - 2017 Huawei Technologies Co., Ltd. All rights reserved.
+Copyright 2016 - 2018 Huawei Technologies Co., Ltd. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ limitations under the License.
 Eclipse ServiceStage Plugin
 ============================
 
-The Eclipse ServiceStage Plugin provides simple integration with Huawei Cloud's ServiceStage service.
+The Eclipse ServiceStage Plugin provides simple integration with Huawei Cloud's ServiceStage service for application developers.
 
 Features
 --------
@@ -51,7 +51,7 @@ The default ServiceStage Preferences should be used (`Window > Preferences > Hua
 
 ### 2. Configure Application
 
-Each project in your workspace will have a different set of ServiceStage settings associated with it. These settings will be stored in `servicestage.xml` at the project root.
+Now you can create your own application projects, each project in your workspace will have a different set of ServiceStage settings associated with it. These settings will be stored in `servicestage.xml` at the project root. Note: this plugin currently only supports tomcat and node.js applications.
 
 1. Right-click the project and select `Huawei > ServiceStage > Configure`
 1. Fill in the application information
@@ -98,20 +98,27 @@ workspace
 └── servicestage-java-client
 ```
 
-Then run `get-dependencies.sh` from inside the plugin's project root directory. This will build `servicestage-client.jar` and place it under the `./lib` directory.
+If your Eclipse workspace running within an Linux environment, you can run `get-dependencies.sh` from inside the plugin's project root directory. This will build `servicestage-client.jar` and place it under the `./lib` directory.
+
+If your Eclipse workspace running within a Windows environment, you can run the following steps manually to compile and place `servicestage-client.jar` :
+
+1. `mvn clean package -DskipTests -DfinalName=servicestage-client`
+1. `copy .\servicestage-java-client\target\servicestage-client.jar ..\servicestage-eclipse-plugin\lib\`
+
+
 
 ### Export Plugin
 
 1. Import the plugin project into Eclipse and make sure it builds without errors
-1. Right-click the project and select Export
-1. Select "Deployable plugin and fragments"
-1. Select "Archive file" and provide the path
-1. Unzip the output file, the plugin jar will be in the `plugins` directory
+1. Right-click the project `servicestage-eclipse-plugin` and select Export
+1. Select "Plug-in Development -> Deployable plug-ins and fragments"
+1. Select "Archive file" and provide the path to create the plugin output zip file (for example: service-eclipse-plugin.zip)
+1. Unzip the output file to a temp folder, the plugin jar will be in the `plugins` directory
 
 Contributing
 -----------
 
-Follow the instructions under [Build](build) to get started.
+Follow the instructions under [Build](#build) to get started.
 
 ### Formatting
 
