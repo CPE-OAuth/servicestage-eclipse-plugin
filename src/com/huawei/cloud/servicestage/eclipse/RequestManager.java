@@ -17,6 +17,8 @@ package com.huawei.cloud.servicestage.eclipse;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -54,6 +56,9 @@ import com.huawei.cloud.servicestage.client.UploadClient;
  */
 public class RequestManager {
     private static RequestManager instance = null;
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter
+            .ofPattern("yyyyMMddHHmmss");
 
     // cached
     private Map<String, String> appTShirtSizes = null;
@@ -158,6 +163,8 @@ public class RequestManager {
         r.parameters.source.artifactNamespace = store
                 .getString(PreferenceConstants.ARTIFACT_NAMESPACE);
         r.parameters.platforms.vpc.id = ds.get(ConfigConstants.APP_VPC_ID);
+        r.parameters.platforms.vpc.parameters.subnet.id = ds
+                .get(ConfigConstants.APP_SUBNET_ID);
         r.parameters.platforms.cce.id = ds.get(ConfigConstants.APP_CLUSTER_ID);
         r.parameters.platforms.cce.parameters.namespace = "default";
         r.parameters.platforms.elb.id = ds.get(ConfigConstants.APP_ELB_ID);
@@ -189,6 +196,11 @@ public class RequestManager {
                     .get(ConfigConstants.RDB_PASSWORD);
         }
 
+        if (r.parameters.services.relationalDatabase == null
+                && r.parameters.services.distributedSession == null) {
+            r.parameters.services = null;
+        }
+
         return r;
     }
 
@@ -210,14 +222,9 @@ public class RequestManager {
 
         r.parameters = new ServiceInstanceRequestBody.Parameters();
 
-        r.parameters.displayName = ds.get(ConfigConstants.APP_DISPLAY_NAME);
-        r.parameters.desc = ds.get(ConfigConstants.APP_DESCRIPTION);
-
-        r.parameters.version = ds.get(ConfigConstants.APP_VERSION);
-
-        r.parameters.size = new ServiceInstanceRequestBody.Parameters.Size();
-        r.parameters.size.id = ds.get(ConfigConstants.APP_SIZE_OPTION);
-        r.parameters.size.replica = ds.getInt(ConfigConstants.APP_REPLICAS);
+        LocalDateTime dt = LocalDateTime.now();
+        String date = dt.format(formatter);
+        r.parameters.version = ds.get(ConfigConstants.APP_VERSION) + "-" + date;
 
         r.parameters.source = new ServiceInstanceRequestBody.Parameters.Source();
         r.parameters.source.type = ds.get(ConfigConstants.SOURCE_TYPE_OPTION);
@@ -242,9 +249,14 @@ public class RequestManager {
      * @throws StorageException
      */
     public Token getAuthToken() throws StorageException, IOException {
+        return getAuthToken(false);
+    }
+
+    public Token getAuthToken(boolean forceNewToken)
+            throws StorageException, IOException {
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();
         boolean secure = store.getBoolean(PreferenceConstants.SECURE);
-        return getAuthToken(secure);
+        return getAuthToken(secure, forceNewToken);
     }
 
     /**
@@ -266,7 +278,7 @@ public class RequestManager {
      * @throws StorageException
      * @throws IOException
      */
-    public Token getAuthToken(boolean secure)
+    public Token getAuthToken(boolean secure, boolean forceNewToken)
             throws StorageException, IOException {
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();
         String region = store.getString(PreferenceConstants.REGION_CHOICE);
@@ -282,7 +294,7 @@ public class RequestManager {
         Token token = null;
 
         // token found in secure store
-        if (tokenStr != null && !tokenStr.isEmpty()) {
+        if (tokenStr != null && !tokenStr.isEmpty() && !forceNewToken) {
             Token t = Token.fromString(tokenStr);
 
             // check if token is valid and not expired
@@ -376,11 +388,18 @@ public class RequestManager {
         return this.vpcs;
     }
 
+    public Map<String, String> getSubnets(String vpcId)
+            throws IOException, StorageException {
+        return HuaweiCloudClient.getSubnets(getAuthToken(), vpcId);
+    }
+
     public Map<String, String> getDCSInstances()
             throws IOException, StorageException {
         if (this.dcsInstances == null) {
+            // there is a bug with DCS, sometimes it doesn't accept an
+            // existing token, therefore, always generate a new one
             this.dcsInstances = HuaweiCloudClient
-                    .getDCSInstances(getAuthToken());
+                    .getDCSInstances(getAuthToken(true));
         }
 
         return this.dcsInstances;

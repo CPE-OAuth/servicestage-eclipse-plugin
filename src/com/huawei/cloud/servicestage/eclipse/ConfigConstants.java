@@ -35,6 +35,8 @@ public class ConfigConstants {
 
     public static final String APP_VPC_ID = "vpc.id";
 
+    public static final String APP_SUBNET_ID = "vpc.parameters.subnet.id";
+
     public static final String APP_CLUSTER_ID = "cce.id";
 
     public static final String APP_TYPE_OPTION = "type";

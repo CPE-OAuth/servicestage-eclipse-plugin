@@ -133,6 +133,12 @@ public interface Resources {
     static final String WIZARD_APP_PAGE_APP_VPC_ERROR = Activator
             .getResourceString("wizard.appPage.appVpcError");
 
+    static final String WIZARD_APP_PAGE_APP_SUBNET = Activator
+            .getResourceString("wizard.appPage.appSubnet");
+
+    static final String WIZARD_APP_PAGE_APP_SUBNET_ERROR = Activator
+            .getResourceString("wizard.appPage.appSubnetError");
+
     static final String WIZARD_APP_PAGE_APP_SIZE = Activator
             .getResourceString("wizard.appPage.appSize");
 

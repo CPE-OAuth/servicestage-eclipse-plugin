@@ -17,7 +17,9 @@ package com.huawei.cloud.servicestage.eclipse;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -182,9 +184,9 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
                 WIZARD_APP_PAGE_APP_ELB, elbs, true, true, platformGroup);
 
         // VPCs
-        Map<String, String> vpcs = Collections.emptyMap();
+        final Map<String, String> vpcs = new LinkedHashMap<>();
         try {
-            vpcs = this.getRequestManger().getVPCs();
+            vpcs.putAll(this.getRequestManger().getVPCs());
         } catch (IOException | StorageException e) {
             Logger.exception(e);
             this.setErrorMessage(WIZARD_APP_PAGE_APP_VPC_ERROR);
@@ -192,6 +194,55 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
 
         Combo vpc = addDropdown(ConfigConstants.APP_VPC_ID,
                 WIZARD_APP_PAGE_APP_VPC, vpcs, true, true, platformGroup);
+
+        String vpcName = vpc.getText();
+        final Map<String, String> subnets = new LinkedHashMap<>();
+        if (vpcName != null && !vpcName.isEmpty()) {
+            String vpcId = null;
+
+            for (Entry<String, String> entry : vpcs.entrySet()) {
+                if (entry.getValue().equals(vpcName)) {
+                    vpcId = entry.getKey();
+                }
+            }
+
+            try {
+                subnets.putAll(this.getRequestManger().getSubnets(vpcId));
+            } catch (IOException | StorageException e) {
+                Logger.exception(e);
+                this.setErrorMessage(WIZARD_APP_PAGE_APP_SUBNET_ERROR);
+            }
+        }
+
+        Combo subnet = addDropdown(ConfigConstants.APP_SUBNET_ID,
+                WIZARD_APP_PAGE_APP_SUBNET, subnets, true, true, platformGroup);
+
+        vpc.addModifyListener(event -> {
+            subnet.removeAll();
+
+            String vpcNamel = vpc.getText();
+            if (vpcNamel != null && !vpcNamel.isEmpty()) {
+                String vpcId = null;
+
+                for (Entry<String, String> entry : vpcs.entrySet()) {
+                    if (entry.getValue().equals(vpcNamel)) {
+                        vpcId = entry.getKey();
+                    }
+                }
+
+                try {
+                    subnets.clear();
+                    subnets.putAll(this.getRequestManger().getSubnets(vpcId));
+
+                    for (String s : subnets.values()) {
+                        subnet.add(s);
+                    }
+                } catch (IOException | StorageException e) {
+                    Logger.exception(e);
+                    this.setErrorMessage(WIZARD_APP_PAGE_APP_SUBNET_ERROR);
+                }
+            }
+        });
 
         // app sizes
         Map<String, String> sizes = Collections.emptyMap();
@@ -223,6 +274,7 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
                         && Util.isNotEmpty(cce.getText())
                         && Util.isNotEmpty(elb.getText())
                         && Util.isNotEmpty(vpc.getText())
+                        && Util.isNotEmpty(subnet.getText())
                         && Util.isNotEmpty(size.getText())
                         && Util.isNotEmpty(replicas.getText())) {
                     setPageComplete(true);
@@ -242,6 +294,7 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         cce.addListener(SWT.Modify, listener);
         elb.addListener(SWT.Modify, listener);
         vpc.addListener(SWT.Modify, listener);
+        subnet.addListener(SWT.Modify, listener);
         size.addListener(SWT.Modify, listener);
         replicas.addListener(SWT.Modify, listener);
 
