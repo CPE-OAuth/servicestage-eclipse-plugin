@@ -45,11 +45,15 @@ Configure Huawei Preferences (`Window > Preferences > Huawei`)
 - Select the region
 - Provide username and password
 
+![Huawei Preferences](./img/1.huawei-preferences.png)
+
 You can choose to store the password securely, however, this requires that Eclipse has a Master Password configured.
 
 The page also provides a `Reset Token` button, if you are having issues later, it may help to reset the token.
 
 The default ServiceStage Preferences should be used (`Window > Preferences > Huawei > ServiceStage`), however, you may configure things such as the `API Url` if needed.
+
+![ServiceStage Preferences](./img/2.servicestage-preferences.png)
 
 ### 2. Configure Application
 
@@ -62,6 +66,10 @@ Now you can create your own application projects, each project in your workspace
 1. Provide information about services that your application uses
 1. Click Finish. The project's `servicestage.xml` file will be created/updated
 
+![App Settings](./img/3.app-settings.png)
+
+![Service Settings](./img/4.services-settings.png)
+
 ### 3. Deploy
 
 Once your preferences and application information have been configured, you are ready to deploy your war file.
@@ -69,6 +77,8 @@ Once your preferences and application information have been configured, you are 
 1. Build your project and generate the war file, if needed
 1. From the Project Explorer, right-click the war file/Node.js project and select `ServiceStage > Deploy`
 1. The deployment process will begin and provide progress information.
+
+![Deploy](./img/5.deploy.png)
 
 The deployment process is as follows:
 
