@@ -446,11 +446,15 @@ public class RequestManager {
         return this.ccseClusters;
     }
 
-    private ServiceStageClient getServiceStageClient() {
+    private ServiceStageClient getServiceStageClient()
+            throws StorageException, IOException {
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
         String apiUrl = store
                 .getString(PreferenceConstants.SERVICESTAGE_API_URL);
+
+        // sub in the region code if it is missing
+        apiUrl = String.format(apiUrl, this.getAuthToken().getRegion());
 
         return new ServiceStageClient(apiUrl);
     }
