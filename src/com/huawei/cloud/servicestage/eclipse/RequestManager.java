@@ -220,8 +220,6 @@ public class RequestManager {
 
         r.serviceId = store.getString(PreferenceConstants.SERVICE_ID);
 
-        r.parameters = new ServiceInstanceRequestBody.Parameters();
-
         LocalDateTime dt = LocalDateTime.now();
         String date = dt.format(formatter);
         r.parameters.version = ds.get(ConfigConstants.APP_VERSION) + "-" + date;
