@@ -38,7 +38,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(PreferenceConstants.PASSWORD, "password");
         store.setDefault(PreferenceConstants.SECURE, false);
         store.setDefault(PreferenceConstants.SERVICESTAGE_API_URL,
-                "https://svcstg.%s.myhuaweicloud.com/v1");
+                "https://servicestage.%s.myhuaweicloud.com/v1");
         store.setDefault(PreferenceConstants.ARTIFACT_NAMESPACE, "default");
         store.setDefault(PreferenceConstants.CAS_CLUSTER_NAMESPACE, "default");
         store.setDefault(PreferenceConstants.SERVICE_ID,
