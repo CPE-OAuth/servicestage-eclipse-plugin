@@ -47,8 +47,6 @@ Configure Huawei Preferences (`Window > Preferences > Huawei`)
 
 ![Huawei Preferences](./img/1.huawei-preferences.png)
 
-You can choose to store the password securely, however, this requires that Eclipse has a Master Password configured.
-
 The page also provides a `Reset Token` button, if you are having issues later, it may help to reset the token.
 
 The default ServiceStage Preferences should be used (`Window > Preferences > Huawei > ServiceStage`), however, you may configure things such as the `API Url` if needed.
