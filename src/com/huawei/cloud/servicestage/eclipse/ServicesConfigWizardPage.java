@@ -21,7 +21,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -59,7 +58,7 @@ public class ServicesConfigWizardPage extends AbstractConfigWizardPage
         Map<String, String> dcsInstances = Collections.emptyMap();
         try {
             dcsInstances = this.getRequestManger().getDCSInstances();
-        } catch (IOException | StorageException e) {
+        } catch (IOException e) {
             Logger.exception(e);
             this.setErrorMessage(WIZARD_SERVICES_PAGE_DCS_ERROR);
         }
@@ -96,7 +95,7 @@ public class ServicesConfigWizardPage extends AbstractConfigWizardPage
         Map<String, String> rdsInstances = Collections.emptyMap();
         try {
             rdsInstances = this.getRequestManger().getRDSInstances();
-        } catch (IOException | StorageException e) {
+        } catch (IOException e) {
             Logger.exception(e);
             this.setErrorMessage(WIZARD_SERVICES_PAGE_RDS_ERROR);
         }

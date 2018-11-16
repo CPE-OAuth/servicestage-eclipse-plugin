@@ -7,11 +7,9 @@ Bundle-Activator: com.huawei.cloud.servicestage.eclipse.Activator
 Bundle-Vendor: HUAWEI
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.equinox.security;bundle-version="1.2.400",
  org.junit,
  org.eclipse.jface,
- org.eclipse.core.resources,
- org.eclipse.e4.core.services;bundle-version="2.1.100"
+ org.eclipse.core.resources
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: com.huawei.cloud.servicestage.eclipse.plugin
 Bundle-ActivationPolicy: lazy

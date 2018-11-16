@@ -25,7 +25,6 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -118,7 +117,7 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         Map<String, String> types = Collections.emptyMap();
         try {
             types = this.getRequestManger().getApplicationTypes();
-        } catch (IOException | StorageException e) {
+        } catch (IOException e) {
             Logger.exception(e);
             this.setErrorMessage(WIZARD_APP_PAGE_APP_TYPE_ERROR);
         }
@@ -144,7 +143,7 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         Set<String> repos = Collections.emptySet();
         try {
             repos = this.getRequestManger().getRepos();
-        } catch (IOException | StorageException e) {
+        } catch (IOException e) {
             Logger.exception(e);
             this.setErrorMessage(e.getMessage());
         }
@@ -162,7 +161,7 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         Map<String, String> cceClusters = Collections.emptyMap();
         try {
             cceClusters = this.getRequestManger().getCCEClusters();
-        } catch (IOException | StorageException e) {
+        } catch (IOException e) {
             Logger.exception(e);
             this.setErrorMessage(WIZARD_APP_PAGE_APP_CLUSTER_ERROR);
         }
@@ -175,7 +174,7 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         Map<String, String> elbs = Collections.emptyMap();
         try {
             elbs = this.getRequestManger().getELBs();
-        } catch (IOException | StorageException e) {
+        } catch (IOException e) {
             Logger.exception(e);
             this.setErrorMessage(WIZARD_APP_PAGE_APP_ELB_ERROR);
         }
@@ -187,7 +186,7 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         final Map<String, String> vpcs = new LinkedHashMap<>();
         try {
             vpcs.putAll(this.getRequestManger().getVPCs());
-        } catch (IOException | StorageException e) {
+        } catch (IOException e) {
             Logger.exception(e);
             this.setErrorMessage(WIZARD_APP_PAGE_APP_VPC_ERROR);
         }
@@ -208,7 +207,7 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
 
             try {
                 subnets.putAll(this.getRequestManger().getSubnets(vpcId));
-            } catch (IOException | StorageException e) {
+            } catch (IOException e) {
                 Logger.exception(e);
                 this.setErrorMessage(WIZARD_APP_PAGE_APP_SUBNET_ERROR);
             }
@@ -237,7 +236,7 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
                     for (String s : subnets.values()) {
                         subnet.add(s);
                     }
-                } catch (IOException | StorageException e) {
+                } catch (IOException e) {
                     Logger.exception(e);
                     this.setErrorMessage(WIZARD_APP_PAGE_APP_SUBNET_ERROR);
                 }
@@ -248,7 +247,7 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         Map<String, String> sizes = Collections.emptyMap();
         try {
             sizes = this.getRequestManger().getAppTShirtSizes();
-        } catch (IOException | StorageException e) {
+        } catch (IOException e) {
             Logger.exception(e);
             this.setErrorMessage(WIZARD_APP_PAGE_APP_SIZE_ERROR);
         }

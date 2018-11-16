@@ -15,13 +15,8 @@
  */
 package com.huawei.cloud.servicestage.eclipse.preferences;
 
-import org.eclipse.equinox.security.storage.ISecurePreferences;
-import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
-import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Composite;
-
-import com.huawei.cloud.servicestage.eclipse.Activator;
 
 /**
  * @author Farhan Arshad
@@ -38,56 +33,5 @@ public class PasswordFieldEditor extends StringFieldEditor {
         super.doFillIntoGrid(parent, numColumns);
 
         getTextControl().setEchoChar('*');
-    }
-
-    @Override
-    protected void doLoad() {
-        if (getTextControl() != null) {
-            String value = getLoadValue();
-            getTextControl().setText(value);
-            oldValue = value;
-        }
-    }
-
-    @Override
-    protected void doLoadDefault() {
-        if (getTextControl() != null) {
-            String value = getLoadValue();
-            getTextControl().setText(value);
-        }
-        valueChanged();
-    }
-
-    @Override
-    protected void doStore() {
-        ISecurePreferences node = getSecurePreferencesNode();
-        try {
-            boolean secure = Activator.getDefault().getPreferenceStore()
-                    .getBoolean(PreferenceConstants.SECURE);
-            node.put(PreferenceConstants.PASSWORD, getTextControl().getText(),
-                    secure);
-        } catch (StorageException e) {
-            setErrorMessage(e.getLocalizedMessage());
-            showErrorMessage();
-            e.printStackTrace();
-        }
-    }
-
-    private String getLoadValue() {
-        try {
-            return getSecurePreferencesNode().get(PreferenceConstants.PASSWORD,
-                    "");
-        } catch (StorageException e) {
-            setErrorMessage(e.getLocalizedMessage());
-            showErrorMessage();
-            e.printStackTrace();
-        }
-
-        return "";
-    }
-
-    private ISecurePreferences getSecurePreferencesNode() {
-        ISecurePreferences root = SecurePreferencesFactory.getDefault();
-        return root.node(Activator.PLUGIN_ID);
     }
 }

@@ -19,9 +19,6 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
-import org.eclipse.equinox.security.storage.ISecurePreferences;
-import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
-import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -53,47 +50,41 @@ public class RequestManagerTest {
     }
 
     @BeforeClass
-    public static void setPreferences() throws StorageException {
+    public static void setPreferences() {
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
         store.putValue(PreferenceConstants.REGION_CHOICE, AuthHelper.REGION);
         store.putValue(PreferenceConstants.USERNAME, AuthHelper.USERNAME);
-
-        ISecurePreferences node = SecurePreferencesFactory.getDefault()
-                .node(Activator.PLUGIN_ID);
-        node.put(PreferenceConstants.PASSWORD, AuthHelper.PASSWORD, false);
+        store.putValue(PreferenceConstants.PASSWORD, AuthHelper.PASSWORD);
     }
 
     @Before
     @After
     public void cleanupPreferences() {
         // remove token from storage
-        ISecurePreferences node = SecurePreferencesFactory.getDefault()
-                .node(Activator.PLUGIN_ID);
-        node.remove(PreferenceConstants.TOKEN);
+        IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+        store.putValue(PreferenceConstants.TOKEN, null);
     }
 
     @Test
-    public void testGetExistingValidAuthToken()
-            throws StorageException, IOException {
+    public void testGetExistingValidAuthToken() throws IOException {
         // add test token that expires in 2099
         String testTokenValue = "testToken";
         Token token = new Token(AuthHelper.USERNAME, AuthHelper.REGION,
                 testTokenValue, AuthHelper.TENANT_ID,
                 Util.stringToDate("2099-08-23T21:40:09.922000Z"));
-        ISecurePreferences node = SecurePreferencesFactory.getDefault()
-                .node(Activator.PLUGIN_ID);
-        node.put(PreferenceConstants.TOKEN, token.toString(), false);
+
+        IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+        store.putValue(PreferenceConstants.TOKEN, token.toString());
 
         // manager should return test token above
         assertEquals(testTokenValue,
-                RequestManager.getInstance().getAuthToken(false).getToken());
+                RequestManager.getInstance().getAuthToken().getToken());
     }
 
     @Test
-    public void testGenerateNewAuthToken()
-            throws StorageException, IOException {
-        String token = RequestManager.getInstance().getAuthToken(false)
+    public void testGenerateNewAuthToken() throws IOException {
+        String token = RequestManager.getInstance().getAuthToken(true)
                 .getToken();
         assertNotNull(token);
         assertFalse(token.isEmpty());

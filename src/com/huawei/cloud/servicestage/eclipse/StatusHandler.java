@@ -19,7 +19,6 @@ import java.io.IOException;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.swt.widgets.Shell;
 
 public class StatusHandler extends ServiceStageHandler implements Resources {
@@ -36,7 +35,7 @@ public class StatusHandler extends ServiceStageHandler implements Resources {
         AppStatus status = null;
         try {
             status = RequestManager.getInstance().getApplicationStatus(project);
-        } catch (IOException | StorageException e) {
+        } catch (IOException e) {
             Util.showExceptionDialog(DIALOG_STATUS_ERROR, shell, e);
             return -1;
         }
@@ -45,7 +44,7 @@ public class StatusHandler extends ServiceStageHandler implements Resources {
         if (status.getStatus().equals(AppStatus.RUNNING)) {
             try {
                 url = RequestManager.getInstance().getApplicationUrl(project);
-            } catch (IOException | StorageException e) {
+            } catch (IOException e) {
                 Logger.exception("Failed to get application URL", e);
             }
         }

@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -122,7 +121,7 @@ public class DeployHandler extends ServiceStageHandler {
 
                     Logger.info(
                             "Uploaded " + localFilePath + " to " + uploadUrl);
-                } catch (StorageException | IOException e) {
+                } catch (IOException e) {
                     // error while uploading
                     Util.showJobExceptionDialog(ERROR, JOB_DEPLOY_UPLOAD_FAILED,
                             shell, e);
@@ -151,7 +150,7 @@ public class DeployHandler extends ServiceStageHandler {
 
                     Logger.info(
                             "Deployment request accepted. Monitoring status now...");
-                } catch (StorageException | IOException e) {
+                } catch (IOException e) {
                     // error while deploying
                     Util.showJobExceptionDialog(JOB_DEPLOY_DEPLOY_FAILED, shell,
                             e);
@@ -194,8 +193,7 @@ public class DeployHandler extends ServiceStageHandler {
                             return Status.OK_STATUS;
                         }
                     }
-                } catch (InterruptedException | IOException
-                        | StorageException e) {
+                } catch (InterruptedException | IOException e) {
                     // error while monitoring
                     Util.showJobExceptionDialog(JOB_DEPLOY_MONITOR_ERROR, shell,
                             e);
@@ -226,7 +224,7 @@ public class DeployHandler extends ServiceStageHandler {
                     // deployment was successful
                     Util.showJobInfoDialog(SUCCESSFUL, message, shell);
                     return Status.OK_STATUS;
-                } catch (StorageException | IOException e) {
+                } catch (IOException e) {
                     // getting app url failed
                     Util.showJobExceptionDialog(JOB_DEPLOY_URL_FAILED, shell,
                             e);

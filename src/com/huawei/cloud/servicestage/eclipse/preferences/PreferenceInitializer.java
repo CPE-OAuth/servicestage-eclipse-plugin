@@ -36,7 +36,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();
         store.setDefault(PreferenceConstants.USERNAME, "username");
         store.setDefault(PreferenceConstants.PASSWORD, "password");
-        store.setDefault(PreferenceConstants.SECURE, false);
         store.setDefault(PreferenceConstants.SERVICESTAGE_API_URL,
                 "https://servicestage.%s.myhuaweicloud.com/v1");
         store.setDefault(PreferenceConstants.ARTIFACT_NAMESPACE, "default");

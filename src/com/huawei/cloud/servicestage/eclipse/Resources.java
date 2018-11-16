@@ -34,12 +34,6 @@ public interface Resources {
     static final String PREFERENCES_HUAWEI_PASSWORD = Activator
             .getResourceString("preferences.huawei.password");
 
-    static final String PREFERENCES_HUAWEI_STORE_SECURELY = Activator
-            .getResourceString("preferences.huawei.storeSecurely");
-
-    static final String PREFERENCES_HUAWEI_SECURE_STORAGE_NOTE = Activator
-            .getResourceString("preferences.huawei.secureStorageNote");
-
     static final String PREFERENCES_HUAWEI_RESET_TOKEN = Activator
             .getResourceString("preferences.huawei.resetToken");
 

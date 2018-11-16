@@ -27,9 +27,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.equinox.security.storage.ISecurePreferences;
-import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
-import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -99,7 +96,7 @@ public class RequestManager {
      * @throws StorageException
      */
     public SimpleResponse createOrUpdateApplication(IProject project)
-            throws StorageException, IOException {
+            throws IOException {
         IDialogSettings ds = Util.loadDialogSettings(project);
 
         String serviceInstanceId = ds.get(ConfigConstants.SERVICE_INSTANCE_ID);
@@ -130,7 +127,7 @@ public class RequestManager {
      * @throws StorageException
      */
     private ServiceInstanceRequestBody getCreateAppRequestBody(
-            IDialogSettings ds, Token token) throws StorageException {
+            IDialogSettings ds, Token token) {
         ServiceInstanceRequestBody r = ServiceInstanceRequestBody
                 .newEmptyInstance();
 
@@ -213,7 +210,7 @@ public class RequestManager {
      * @throws StorageException
      */
     private ServiceInstanceRequestBody getUpdateAppRequestBody(
-            IDialogSettings ds, Token token) throws StorageException {
+            IDialogSettings ds, Token token) {
         ServiceInstanceRequestBody r = new ServiceInstanceRequestBody();
 
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();
@@ -250,52 +247,32 @@ public class RequestManager {
      * @throws IOException
      * @throws StorageException
      */
-    public Token getAuthToken() throws StorageException, IOException {
+    public Token getAuthToken() throws IOException {
         return getAuthToken(false);
-    }
-
-    public Token getAuthToken(boolean forceNewToken)
-            throws StorageException, IOException {
-        IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-        boolean secure = store.getBoolean(PreferenceConstants.SECURE);
-        return getAuthToken(secure, forceNewToken);
     }
 
     /**
      * Gets an auth token for user. The user's information is obtained from the
      * plug-in preferences. <br>
      * <br>
-     * This token will also be saved in the secure preference storage. <br>
+     * This token will also be saved in the preference storage. <br>
      * <br>
-     * For secure preference storage to work, a master password must be set in
-     * Eclipse. If secure storage is not desired, set secure parameter to false.
-     * The token will then be stored in plain-text. <br>
-     * <br>
-     * Note: set secure to false for JUnit testing since master password will
-     * not be set.
      * 
-     * @param secure
-     *            true if token should be stored securely, false otherwise.
      * @return a valid Auth Token or null
-     * @throws StorageException
      * @throws IOException
      */
-    public Token getAuthToken(boolean secure, boolean forceNewToken)
-            throws StorageException, IOException {
+    public Token getAuthToken(boolean forceNewToken) throws IOException {
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();
         String region = store.getString(PreferenceConstants.REGION_CHOICE);
         String username = store.getString(PreferenceConstants.USERNAME);
-
-        ISecurePreferences node = SecurePreferencesFactory.getDefault()
-                .node(Activator.PLUGIN_ID);
-        String password = node.get(PreferenceConstants.PASSWORD, "");
+        String password = store.getString(PreferenceConstants.PASSWORD);
 
         // get existing token, if any
-        String tokenStr = node.get(PreferenceConstants.TOKEN, "");
+        String tokenStr = store.getString(PreferenceConstants.TOKEN);
 
         Token token = null;
 
-        // token found in secure store
+        // token found in store
         if (tokenStr != null && !tokenStr.isEmpty() && !forceNewToken) {
             Token t = Token.fromString(tokenStr);
 
@@ -311,14 +288,13 @@ public class RequestManager {
             Logger.info("No valid token found, getting new token");
 
             token = AuthClient.getAuthToken(region, username, password);
-            node.put(PreferenceConstants.TOKEN, token.toString(), secure);
+            store.putValue(PreferenceConstants.TOKEN, token.toString());
         }
 
         return token;
     }
 
-    public void load(IProgressMonitor monitor)
-            throws IOException, StorageException {
+    public void load(IProgressMonitor monitor) throws IOException {
         SubMonitor subMonitor = SubMonitor.convert(monitor, 90);
 
         getAppTShirtSizes();
@@ -374,7 +350,7 @@ public class RequestManager {
         subMonitor.worked(10);
     }
 
-    public Map<String, String> getELBs() throws IOException, StorageException {
+    public Map<String, String> getELBs() throws IOException {
         if (this.elbs == null) {
             this.elbs = HuaweiCloudClient.getELBs(getAuthToken());
         }
@@ -382,7 +358,7 @@ public class RequestManager {
         return this.elbs;
     }
 
-    public Map<String, String> getVPCs() throws IOException, StorageException {
+    public Map<String, String> getVPCs() throws IOException {
         if (this.vpcs == null) {
             this.vpcs = HuaweiCloudClient.getVPCs(getAuthToken());
         }
@@ -390,13 +366,11 @@ public class RequestManager {
         return this.vpcs;
     }
 
-    public Map<String, String> getSubnets(String vpcId)
-            throws IOException, StorageException {
+    public Map<String, String> getSubnets(String vpcId) throws IOException {
         return HuaweiCloudClient.getSubnets(getAuthToken(), vpcId);
     }
 
-    public Map<String, String> getDCSInstances()
-            throws IOException, StorageException {
+    public Map<String, String> getDCSInstances() throws IOException {
         if (this.dcsInstances == null) {
             // there is a bug with DCS, sometimes it doesn't accept an
             // existing token, therefore, always generate a new one
@@ -407,8 +381,7 @@ public class RequestManager {
         return this.dcsInstances;
     }
 
-    public Map<String, String> getRDSInstances()
-            throws IOException, StorageException {
+    public Map<String, String> getRDSInstances() throws IOException {
         if (this.rdsInstances == null) {
             this.rdsInstances = HuaweiCloudClient
                     .getRDSInstances(getAuthToken());
@@ -417,8 +390,7 @@ public class RequestManager {
         return this.rdsInstances;
     }
 
-    public Map<String, String> getRegions()
-            throws IOException, StorageException {
+    public Map<String, String> getRegions() throws IOException {
         if (this.regions == null) {
             // hard code regions for now
             this.regions = new LinkedHashMap<>();
@@ -438,8 +410,7 @@ public class RequestManager {
         return this.regions;
     }
 
-    public Map<String, String> getCCEClusters()
-            throws IOException, StorageException {
+    public Map<String, String> getCCEClusters() throws IOException {
         if (this.ccseClusters == null) {
             this.ccseClusters = HuaweiCloudClient
                     .getCCEClusters(getAuthToken());
@@ -448,8 +419,7 @@ public class RequestManager {
         return this.ccseClusters;
     }
 
-    private ServiceStageClient getServiceStageClient()
-            throws StorageException, IOException {
+    private ServiceStageClient getServiceStageClient() throws IOException {
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
         String apiUrl = store
@@ -469,8 +439,7 @@ public class RequestManager {
      * @throws IOException
      * @throws StorageException
      */
-    public Map<String, String> getAppTShirtSizes()
-            throws IOException, StorageException {
+    public Map<String, String> getAppTShirtSizes() throws IOException {
         if (this.appTShirtSizes == null) {
             this.appTShirtSizes = getServiceStageClient()
                     .getAppTShirtSizes(getAuthToken());
@@ -487,8 +456,7 @@ public class RequestManager {
      * @throws IOException
      * @throws StorageException
      */
-    public Map<String, String> getApplicationTypes()
-            throws IOException, StorageException {
+    public Map<String, String> getApplicationTypes() throws IOException {
         if (this.applicationTypes == null) {
             this.applicationTypes = getServiceStageClient()
                     .getApplicationTypes(getAuthToken());
@@ -504,7 +472,7 @@ public class RequestManager {
      * @throws IOException
      * @throws StorageException
      */
-    public Set<String> getRepos() throws IOException, StorageException {
+    public Set<String> getRepos() throws IOException {
         if (this.repos == null) {
             Token token = getAuthToken();
             String domain = token.getUsername();
@@ -523,8 +491,7 @@ public class RequestManager {
      * @throws IOException
      * @throws StorageException
      */
-    public Set<String> getPackages(String repo)
-            throws IOException, StorageException {
+    public Set<String> getPackages(String repo) throws IOException {
         Token token = getAuthToken();
         String domain = token.getUsername();
         String namespace = "default";
@@ -541,7 +508,7 @@ public class RequestManager {
      * @throws StorageException
      */
     public Set<String> getVersions(String repo, String packageName)
-            throws IOException, StorageException {
+            throws IOException {
         Token token = getAuthToken();
         String domain = token.getUsername();
         String namespace = "default";
@@ -549,8 +516,7 @@ public class RequestManager {
                 packageName, token);
     }
 
-    public String upload(IResource file, IProject project)
-            throws StorageException, IOException {
+    public String upload(IResource file, IProject project) throws IOException {
         String localAbsoluteFilePath = file.getRawLocation().makeAbsolute()
                 .toString();
 
@@ -567,7 +533,7 @@ public class RequestManager {
      * @throws IOException
      */
     public String upload(String localAbsoluteFilePath, IProject project)
-            throws StorageException, IOException {
+            throws IOException {
         Token token = getAuthToken();
 
         String name = new File(localAbsoluteFilePath).getName();
@@ -609,7 +575,7 @@ public class RequestManager {
      * @throws StorageException
      */
     public SimpleResponse getApplicationInfo(IProject project)
-            throws IOException, StorageException {
+            throws IOException {
         Token token = getAuthToken();
         IDialogSettings ds = Util.loadDialogSettings(project);
 
@@ -626,8 +592,7 @@ public class RequestManager {
      * @throws IOException
      * @throws StorageException
      */
-    public AppStatus getApplicationStatus(IProject project)
-            throws IOException, StorageException {
+    public AppStatus getApplicationStatus(IProject project) throws IOException {
         Token token = getAuthToken();
         IDialogSettings ds = Util.loadDialogSettings(project);
 
@@ -656,8 +621,7 @@ public class RequestManager {
      * @throws IOException
      * @throws StorageException
      */
-    public String getApplicationUrl(IProject project)
-            throws IOException, StorageException {
+    public String getApplicationUrl(IProject project) throws IOException {
         Token token = getAuthToken();
         IDialogSettings ds = Util.loadDialogSettings(project);
 

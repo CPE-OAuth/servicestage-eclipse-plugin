@@ -21,7 +21,6 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.wizard.Wizard;
@@ -67,7 +66,7 @@ public class ConfigHandler extends ServiceStageHandler {
                 subMonitor.worked(10);
                 try {
                     requestManager.load(subMonitor.newChild(90));
-                } catch (IOException | StorageException e) {
+                } catch (IOException e) {
                     Util.showJobExceptionDialog(e.getMessage(),
                             window.getShell(), e);
                     return;

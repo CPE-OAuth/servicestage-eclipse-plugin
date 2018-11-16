@@ -17,17 +17,11 @@ package com.huawei.cloud.servicestage.eclipse.preferences;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.eclipse.equinox.security.storage.ISecurePreferences;
-import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
-import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -41,10 +35,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.PreferenceLinkArea;
-import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
-
 import com.huawei.cloud.servicestage.eclipse.Activator;
 import com.huawei.cloud.servicestage.eclipse.Logger;
 import com.huawei.cloud.servicestage.eclipse.RequestManager;
@@ -75,7 +65,7 @@ public class HuaweiPreferencePage extends FieldEditorPreferencePage
         Map<String, String> regions = Collections.emptyMap();
         try {
             regions = RequestManager.getInstance().getRegions();
-        } catch (IOException | StorageException e) {
+        } catch (IOException e) {
             Logger.exception(e);
         }
         addDropdown(PreferenceConstants.REGION_CHOICE,
@@ -92,9 +82,6 @@ public class HuaweiPreferencePage extends FieldEditorPreferencePage
                 PREFERENCES_HUAWEI_USERNAME, authenticationGroup));
         addField(new PasswordFieldEditor(PreferenceConstants.PASSWORD,
                 PREFERENCES_HUAWEI_PASSWORD, authenticationGroup));
-        addField(new BooleanFieldEditorWithListener(PreferenceConstants.SECURE,
-                PREFERENCES_HUAWEI_STORE_SECURELY, authenticationGroup));
-        createLinkArea(authenticationGroup);
 
         addResetTokenButton(authenticationGroup);
     }
@@ -103,14 +90,14 @@ public class HuaweiPreferencePage extends FieldEditorPreferencePage
         Button resetTokenButton = new Button(parent, SWT.PUSH);
         resetTokenButton.setText(PREFERENCES_HUAWEI_RESET_TOKEN);
         resetTokenButton.setLayoutData(
-                new GridData(SWT.RIGHT, SWT.BOTTOM, true, true, 1, 1));
+                new GridData(SWT.RIGHT, SWT.BOTTOM, true, true, 2, 1));
 
         resetTokenButton.addListener(SWT.Selection, new Listener() {
             @Override
             public void handleEvent(Event arg0) {
-                ISecurePreferences node = SecurePreferencesFactory.getDefault()
-                        .node(Activator.PLUGIN_ID);
-                node.remove(PreferenceConstants.TOKEN);
+                IPreferenceStore store = Activator.getDefault()
+                        .getPreferenceStore();
+                store.setValue(PreferenceConstants.TOKEN, "");
             }
         });
     }
@@ -121,33 +108,8 @@ public class HuaweiPreferencePage extends FieldEditorPreferencePage
         group.setLayout(layout);
 
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.widthHint = 400;
+        gd.widthHint = 200;
         group.setLayoutData(gd);
-    }
-
-    private void createLinkArea(Composite parent) {
-        IPreferenceNode node = getPreferenceNode(
-                "org.eclipse.equinox.security.ui.storage");
-        if (node != null) {
-            PreferenceLinkArea linkArea = new PreferenceLinkArea(parent,
-                    SWT.WRAP, "org.eclipse.equinox.security.ui.storage",
-                    PREFERENCES_HUAWEI_SECURE_STORAGE_NOTE,
-                    (IWorkbenchPreferenceContainer) getContainer(), null);
-            GridData data = new GridData(
-                    GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
-            linkArea.getControl().setLayoutData(data);
-        }
-    }
-
-    private IPreferenceNode getPreferenceNode(String pageId) {
-        Iterator<IPreferenceNode> iterator = PlatformUI.getWorkbench()
-                .getPreferenceManager().getElements(PreferenceManager.PRE_ORDER)
-                .iterator();
-        while (iterator.hasNext()) {
-            IPreferenceNode next = iterator.next();
-            if (next.getId().equals(pageId)) return next;
-        }
-        return null;
     }
 
     private Combo addDropdown(String id, String labelText,
