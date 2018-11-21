@@ -49,10 +49,6 @@ Configure Huawei Preferences (`Window > Preferences > Huawei`)
 
 The page also provides a `Reset Token` button, if you are having issues later, it may help to reset the token.
 
-The default ServiceStage Preferences should be used (`Window > Preferences > Huawei > ServiceStage`), however, you may configure things such as the `API Url` if needed.
-
-![ServiceStage Preferences](./img/2.servicestage-preferences.png)
-
 ### 2. Configure Application
 
 Now you can create your own application projects, each project in your workspace will have a different set of ServiceStage settings associated with it. These settings will be stored in `servicestage.xml` at the project root. Note: this plugin currently only supports tomcat and node.js applications.
