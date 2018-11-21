@@ -31,10 +31,6 @@ public class PreferenceConstants {
 
     public static final String SERVICESTAGE_API_URL = "servicestageAPIUrl";
 
-    public static final String ARTIFACT_NAMESPACE = "artifactNamespace";
-
-    public static final String CAS_CLUSTER_NAMESPACE = "casClusterNamespace";
-
     public static final String SERVICE_ID = "serviceId";
 
     public static final String PLAN_ID = "planId";

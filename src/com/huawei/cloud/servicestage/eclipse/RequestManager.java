@@ -157,13 +157,11 @@ public class RequestManager {
         r.parameters.source.repoNamespace = ds
                 .get(ConfigConstants.SOURCE_NAMESPACE);
         r.parameters.source.projBranch = ds.get(ConfigConstants.SOURCE_BRANCH);
-        r.parameters.source.artifactNamespace = store
-                .getString(PreferenceConstants.ARTIFACT_NAMESPACE);
         r.parameters.platforms.vpc.id = ds.get(ConfigConstants.APP_VPC_ID);
         r.parameters.platforms.vpc.parameters.subnet.id = ds
                 .get(ConfigConstants.APP_SUBNET_ID);
         r.parameters.platforms.cce.id = ds.get(ConfigConstants.APP_CLUSTER_ID);
-        r.parameters.platforms.cce.parameters.namespace = "default";
+        r.parameters.platforms.cce.parameters.namespace = ds.get(ConfigConstants.APP_CCE_NAMESPACE);
         r.parameters.platforms.elb.id = ds.get(ConfigConstants.APP_ELB_ID);
 
         if (ds.get(ConfigConstants.DCS_ID) == null
@@ -233,8 +231,6 @@ public class RequestManager {
         r.parameters.source.repoNamespace = ds
                 .get(ConfigConstants.SOURCE_NAMESPACE);
         r.parameters.source.projBranch = ds.get(ConfigConstants.SOURCE_BRANCH);
-        r.parameters.source.artifactNamespace = store
-                .getString(PreferenceConstants.ARTIFACT_NAMESPACE);
 
         return r;
     }
@@ -364,6 +360,10 @@ public class RequestManager {
         }
 
         return this.vpcs;
+    }
+
+    public Set<String> getNamespaces(String clusterId) throws IOException {
+        return HuaweiCloudClient.getNamespaces(getAuthToken(), clusterId);
     }
 
     public Map<String, String> getSubnets(String vpcId) throws IOException {

@@ -37,38 +37,6 @@ public interface Resources {
     static final String PREFERENCES_HUAWEI_RESET_TOKEN = Activator
             .getResourceString("preferences.huawei.resetToken");
 
-    // Service Stage Preferences Page
-    static final String PREFERENCES_SERVICESTAGE_DESCRIPTION = Activator
-            .getResourceString("preferences.huawei.servicestage.description");
-
-    static final String PREFERENCES_SERVICESTAGE_API_URL = Activator
-            .getResourceString("preferences.huawei.servicestage.apiUrl");
-
-    static final String PREFERENCES_SERVICESTAGE_ARTIFACT_NAMESPACE = Activator
-            .getResourceString(
-                    "preferences.huawei.servicestage.artifactNamespace");
-
-    static final String PREFERENCES_SERVICESTAGE_CAS_CLUSTER_NAMESPACE = Activator
-            .getResourceString(
-                    "preferences.huawei.servicestage.casClusterNamespace");
-
-    static final String PREFERENCES_SERVICESTAGE_SERVICE_ID = Activator
-            .getResourceString("preferences.huawei.servicestage.serviceId");
-
-    static final String PREFERENCES_SERVICESTAGE_PLAN_ID = Activator
-            .getResourceString("preferences.huawei.servicestage.planId");
-
-    static final String PREFERENCES_SERVICESTAGE_ORGANIZATION_GUID = Activator
-            .getResourceString(
-                    "preferences.huawei.servicestage.organizationGuid");
-
-    static final String PREFERENCES_SERVICESTAGE_SPACE_GUID = Activator
-            .getResourceString("preferences.huawei.servicestage.spaceGuid");
-
-    static final String PREFERENCES_SERVICESTAGE_CONTEXT_ORDER_ID = Activator
-            .getResourceString(
-                    "preferences.huawei.servicestage.contextOrderId");
-
     // App Wizard Page
     static final String WIZARD_APP_PAGE_PAGE_NAME = Activator
             .getResourceString("wizard.appPage.pageName");
@@ -114,6 +82,12 @@ public interface Resources {
 
     static final String WIZARD_APP_PAGE_APP_CLUSTER_ERROR = Activator
             .getResourceString("wizard.appPage.appClusterError");
+
+    static final String WIZARD_APP_PAGE_APP_CLUSTER_NAMESPACE = Activator
+            .getResourceString("wizard.appPage.appClusterNamespace");
+
+    static final String WIZARD_APP_PAGE_APP_CLUSTER_NAMESPACE_ERROR = Activator
+            .getResourceString("wizard.appPage.appClusterNamespaceError");
 
     static final String WIZARD_APP_PAGE_APP_ELB = Activator
             .getResourceString("wizard.appPage.appElb");

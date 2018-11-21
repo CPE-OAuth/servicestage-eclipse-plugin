@@ -36,10 +36,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();
         store.setDefault(PreferenceConstants.USERNAME, "username");
         store.setDefault(PreferenceConstants.PASSWORD, "password");
+
+        // these preferences can not be set at this time, use defaults
         store.setDefault(PreferenceConstants.SERVICESTAGE_API_URL,
                 "https://servicestage.%s.myhuaweicloud.com/v1");
-        store.setDefault(PreferenceConstants.ARTIFACT_NAMESPACE, "default");
-        store.setDefault(PreferenceConstants.CAS_CLUSTER_NAMESPACE, "default");
         store.setDefault(PreferenceConstants.SERVICE_ID,
                 "SRV238CASUFGHI09314A");
         store.setDefault(PreferenceConstants.PLAN_ID, "cas-pay2go");

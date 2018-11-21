@@ -9,15 +9,6 @@
 			name="Huawei">
 		</page>
 	</extension>
-	<extension
-		point="org.eclipse.ui.preferencePages">
-		<page
-			name="ServiceStage"
-			category="com.huawei.cloud.servicestage.eclipse.preferences.HuaweiPreferencePage"
-			class="com.huawei.cloud.servicestage.eclipse.preferences.ServiceStagePreferencePage"
-			id="com.huawei.cloud.servicestage.eclipse.preferences.ServiceStagePreferencePage">
-		</page>
-	</extension>
 	<extension point="org.eclipse.core.runtime.preferences">
 		<initializer
 			class="com.huawei.cloud.servicestage.eclipse.preferences.PreferenceInitializer">

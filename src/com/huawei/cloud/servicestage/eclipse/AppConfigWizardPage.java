@@ -17,6 +17,7 @@ package com.huawei.cloud.servicestage.eclipse;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -158,9 +159,9 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
                 WIZARD_APP_PAGE_PLATFORM_GROUP_NAME);
 
         // CCE clusters
-        Map<String, String> cceClusters = Collections.emptyMap();
+        final Map<String, String> cceClusters = new LinkedHashMap<>();
         try {
-            cceClusters = this.getRequestManger().getCCEClusters();
+            cceClusters.putAll(this.getRequestManger().getCCEClusters());
         } catch (IOException e) {
             Logger.exception(e);
             this.setErrorMessage(WIZARD_APP_PAGE_APP_CLUSTER_ERROR);
@@ -169,6 +170,57 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         Combo cce = addDropdown(ConfigConstants.APP_CLUSTER_ID,
                 WIZARD_APP_PAGE_APP_CLUSTER, cceClusters, true, true,
                 platformGroup);
+
+        // namespaces
+        String cceName = cce.getText();
+        final Set<String> namespaces = new HashSet<>();
+        if (cceName != null && !cceName.isEmpty()) {
+            String cceId = null;
+
+            for (Entry<String, String> entry : cceClusters.entrySet()) {
+                if (entry.getValue().equals(cceName)) {
+                    cceId = entry.getKey();
+                }
+            }
+
+            try {
+                namespaces.addAll(this.getRequestManger().getNamespaces(cceId));
+            } catch (IOException e) {
+                Logger.exception(e);
+                this.setErrorMessage(WIZARD_APP_PAGE_APP_SUBNET_ERROR);
+            }
+        }
+
+        Combo namespace = addDropdown(ConfigConstants.APP_CCE_NAMESPACE,
+                WIZARD_APP_PAGE_APP_CLUSTER_NAMESPACE, namespaces, true, true,
+                platformGroup);
+
+        cce.addModifyListener(event -> {
+            namespace.removeAll();
+
+            String cceNamel = cce.getText();
+            if (cceNamel != null && !cceNamel.isEmpty()) {
+                String cceId = null;
+
+                for (Entry<String, String> entry : cceClusters.entrySet()) {
+                    if (entry.getValue().equals(cceNamel)) {
+                        cceId = entry.getKey();
+                    }
+                }
+
+                try {
+                    namespaces.clear();
+                    namespaces.addAll(this.getRequestManger().getNamespaces(cceId));
+
+                    for (String s : namespaces) {
+                        namespace.add(s);
+                    }
+                } catch (IOException e) {
+                    Logger.exception(e);
+                    this.setErrorMessage(WIZARD_APP_PAGE_APP_CLUSTER_NAMESPACE_ERROR);
+                }
+            }
+        });
 
         // ELBs
         Map<String, String> elbs = Collections.emptyMap();
@@ -304,7 +356,7 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
 
     @Override
     protected int getPageLabelWidth() {
-        return 110;
+        return 120;
     }
 
 }
