@@ -545,7 +545,7 @@ public class RequestManager {
 
         String repo = ds.get(ConfigConstants.SWR_REPO);
         // String packageName = ds.get(ConfigConstants.APP_NAME);
-        String packageName = project.getName();
+        String packageName = project.getName().replaceAll("[^A-Za-z0-9]", "");
         String version = ds.get(ConfigConstants.APP_VERSION);
 
         SimpleResponse uploadResponse = new UploadClient().upload(
