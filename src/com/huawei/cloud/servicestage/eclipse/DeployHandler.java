@@ -67,11 +67,7 @@ public class DeployHandler extends ServiceStageHandler {
         // get file path
         String dialogMessage = null;
         String lfp = null;
-        if (this.file != null) {
-            lfp = file.getRawLocation().makeAbsolute().toString();
-            dialogMessage = String.format(DIALOG_DEPLOY_MESSAGE,
-                    file.getProjectRelativePath().toString());
-        } else if (supportedProject) {
+        if (supportedProject) {
             try {
                 lfp = Util.createZipFile(this.project);
             } catch (IOException e) {
@@ -81,6 +77,10 @@ public class DeployHandler extends ServiceStageHandler {
             }
             dialogMessage = String.format(DIALOG_DEPLOY_MESSAGE,
                     this.project.getName());
+        } else if (this.file != null) {
+            lfp = file.getRawLocation().makeAbsolute().toString();
+            dialogMessage = String.format(DIALOG_DEPLOY_MESSAGE,
+                    file.getProjectRelativePath().toString());
         }
 
         // final needed
@@ -205,10 +205,18 @@ public class DeployHandler extends ServiceStageHandler {
                 }
 
                 if (status == null
-                        || status.getStatus().equals(AppStatus.FAILED)) {
-                    Util.showJobInfoDialog(FAILED, JOB_DEPLOY_DEPLOY_FAILED,
-                            shell);
-                    return Status.OK_STATUS;
+                        || !status.getStatus().equals(AppStatus.RUNNING)) {
+                    try {
+                        String taskLogs = RequestManager.getInstance()
+                                .getApplicationTaskLogs(project);
+                        Util.showJobInfoDialog(FAILED, JOB_DEPLOY_DEPLOY_FAILED,
+                                taskLogs, shell);
+                        return Status.OK_STATUS;
+                    } catch (IOException e) {
+                        Util.showJobExceptionDialog(JOB_DEPLOY_MONITOR_ERROR,
+                                shell, e);
+                        return Status.OK_STATUS;
+                    }
                 }
 
                 // get app url

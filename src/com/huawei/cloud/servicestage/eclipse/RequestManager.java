@@ -585,6 +585,29 @@ public class RequestManager {
     }
 
     /**
+     * Get application task longs
+     * @param project
+     * @return
+     * @throws IOException
+     */
+    public String getApplicationTaskLogs(IProject project)
+            throws IOException {
+        Token token = getAuthToken();
+        IDialogSettings ds = Util.loadDialogSettings(project);
+
+        String instanceId = ds.get(ConfigConstants.SERVICE_INSTANCE_ID);
+
+        SimpleResponse response = getServiceStageClient()
+                .getApplicationTaskLogs(instanceId, token);
+
+        if (response.getMessage() == null || response.getMessage().isEmpty()) {
+            return "Error";
+        } else {
+            return response.getMessage();
+        }
+    }
+
+    /**
      * Gets status of the application
      * 
      * @param project

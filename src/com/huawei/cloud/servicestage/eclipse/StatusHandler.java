@@ -35,31 +35,39 @@ public class StatusHandler extends ServiceStageHandler implements Resources {
         AppStatus status = null;
         try {
             status = RequestManager.getInstance().getApplicationStatus(project);
+            Logger.info(status.getDetails());
         } catch (IOException e) {
             Util.showExceptionDialog(DIALOG_STATUS_ERROR, shell, e);
             return -1;
         }
 
-        String url = null;
         if (status.getStatus().equals(AppStatus.RUNNING)) {
+            String url;
             try {
                 url = RequestManager.getInstance().getApplicationUrl(project);
             } catch (IOException e) {
                 Logger.exception("Failed to get application URL", e);
+                url = "Failed to get application URL";
             }
-        }
 
-        String message;
-        if (url == null) {
-            message = String.format(DIALOG_STATUS_MESSAGE, status.getStatus());
-        } else {
-            message = String.format(DIALOG_STATUS_URLMESSAGE,
+            String message = String.format(DIALOG_STATUS_URLMESSAGE,
                     status.getStatus(), url);
+            Util.showInfoDialog(status.getStatus(), message, window.getShell());
+        } else {
+            String taskLogs;
+            try {
+                taskLogs = RequestManager.getInstance()
+                        .getApplicationTaskLogs(project);
+            } catch (IOException e) {
+                Logger.exception("Failed to get application task logs", e);
+                taskLogs = "Failed to get application task logs";
+            }
+
+            String message = String.format(DIALOG_STATUS_MESSAGE,
+                    status.getStatus());
+            Util.showInfoDialog(status.getStatus(), message, taskLogs,
+                    window.getShell());
         }
-
-        Logger.info(status.getDetails());
-
-        Util.showInfoDialog(status.getStatus(), message, window.getShell());
 
         return 0;
     }
