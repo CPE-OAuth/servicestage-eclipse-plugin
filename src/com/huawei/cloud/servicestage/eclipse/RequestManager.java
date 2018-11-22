@@ -476,7 +476,7 @@ public class RequestManager {
         if (this.repos == null) {
             Token token = getAuthToken();
             String domain = token.getUsername();
-            String namespace = "default";
+            String namespace = domain; // hardcode the namespace using username
             this.repos = new UploadClient().getRepos(domain, namespace, token);
         }
 
@@ -494,7 +494,7 @@ public class RequestManager {
     public Set<String> getPackages(String repo) throws IOException {
         Token token = getAuthToken();
         String domain = token.getUsername();
-        String namespace = "default";
+        String namespace = domain;
         return new UploadClient().getPackages(domain, namespace, repo, token);
     }
 
@@ -511,7 +511,7 @@ public class RequestManager {
             throws IOException {
         Token token = getAuthToken();
         String domain = token.getUsername();
-        String namespace = "default";
+        String namespace = domain;
         return new UploadClient().getVersions(domain, namespace, repo,
                 packageName, token);
     }
@@ -539,7 +539,7 @@ public class RequestManager {
         String name = new File(localAbsoluteFilePath).getName();
 
         String domain = token.getUsername();
-        String namespace = "default"; // hard-coded for now
+        String namespace = domain; // hard-coded domain as the namespace for now
 
         IDialogSettings ds = Util.loadDialogSettings(project);
 
