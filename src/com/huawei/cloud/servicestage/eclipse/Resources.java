@@ -125,6 +125,9 @@ public interface Resources {
     static final String WIZARD_SRC_PAGE_SWR_REPO = Activator
             .getResourceString("wizard.srcPage.swrRepo");
 
+    static final String WIZARD_APP_PAGE_SWR_REPO_ERROR = Activator
+            .getResourceString("wizard.appPage.swrRepoError");
+
     // Services Wizard Page
     static final String WIZARD_SERVICES_PAGE_PAGE_NAME = Activator
             .getResourceString("wizard.servicesPage.pageName");

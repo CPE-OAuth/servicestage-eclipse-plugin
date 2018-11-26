@@ -59,8 +59,9 @@ public class ServicesConfigWizardPage extends AbstractConfigWizardPage
         try {
             dcsInstances = this.getRequestManger().getDCSInstances();
         } catch (IOException e) {
-            Logger.exception(e);
             this.setErrorMessage(WIZARD_SERVICES_PAGE_DCS_ERROR);
+            Util.showJobExceptionDialog(WIZARD_SERVICES_PAGE_DCS_ERROR,
+                    parent.getShell(), e);
         }
 
         Combo dcsInstance = addDropdown(ConfigConstants.DCS_ID,
@@ -96,8 +97,9 @@ public class ServicesConfigWizardPage extends AbstractConfigWizardPage
         try {
             rdsInstances = this.getRequestManger().getRDSInstances();
         } catch (IOException e) {
-            Logger.exception(e);
             this.setErrorMessage(WIZARD_SERVICES_PAGE_RDS_ERROR);
+            Util.showJobExceptionDialog(WIZARD_SERVICES_PAGE_RDS_ERROR,
+                    parent.getShell(), e);
         }
 
         Combo rdsInstance = addDropdown(ConfigConstants.RDB_ID,

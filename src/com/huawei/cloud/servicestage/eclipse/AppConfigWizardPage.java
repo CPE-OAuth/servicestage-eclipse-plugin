@@ -15,7 +15,6 @@
  */
 package com.huawei.cloud.servicestage.eclipse;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -118,9 +117,10 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         Map<String, String> types = Collections.emptyMap();
         try {
             types = this.getRequestManger().getApplicationTypes();
-        } catch (IOException e) {
-            Logger.exception(e);
+        } catch (Exception e) {
             this.setErrorMessage(WIZARD_APP_PAGE_APP_TYPE_ERROR);
+            Util.showJobExceptionDialog(WIZARD_APP_PAGE_APP_TYPE_ERROR,
+                    parent.getShell(), e);
         }
 
         Combo type = addDropdown(ConfigConstants.APP_TYPE_OPTION,
@@ -144,9 +144,10 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         Set<String> repos = Collections.emptySet();
         try {
             repos = this.getRequestManger().getRepos();
-        } catch (IOException e) {
-            Logger.exception(e);
-            this.setErrorMessage(e.getMessage());
+        } catch (Exception e) {
+            this.setErrorMessage(WIZARD_APP_PAGE_SWR_REPO_ERROR);
+            Util.showJobExceptionDialog(WIZARD_APP_PAGE_SWR_REPO_ERROR,
+                    parent.getShell(), e);
         }
 
         Combo repo = addDropdown(ConfigConstants.SWR_REPO,
@@ -162,9 +163,10 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         final Map<String, String> cceClusters = new LinkedHashMap<>();
         try {
             cceClusters.putAll(this.getRequestManger().getCCEClusters());
-        } catch (IOException e) {
-            Logger.exception(e);
+        } catch (Exception e) {
             this.setErrorMessage(WIZARD_APP_PAGE_APP_CLUSTER_ERROR);
+            Util.showJobExceptionDialog(WIZARD_APP_PAGE_APP_CLUSTER_ERROR,
+                    parent.getShell(), e);
         }
 
         Combo cce = addDropdown(ConfigConstants.APP_CLUSTER_ID,
@@ -185,9 +187,10 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
 
             try {
                 namespaces.addAll(this.getRequestManger().getNamespaces(cceId));
-            } catch (IOException e) {
-                Logger.exception(e);
+            } catch (Exception e) {
                 this.setErrorMessage(WIZARD_APP_PAGE_APP_SUBNET_ERROR);
+                Util.showJobExceptionDialog(WIZARD_APP_PAGE_APP_SUBNET_ERROR,
+                        parent.getShell(), e);
             }
         }
 
@@ -210,14 +213,18 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
 
                 try {
                     namespaces.clear();
-                    namespaces.addAll(this.getRequestManger().getNamespaces(cceId));
+                    namespaces.addAll(
+                            this.getRequestManger().getNamespaces(cceId));
 
                     for (String s : namespaces) {
                         namespace.add(s);
                     }
-                } catch (IOException e) {
-                    Logger.exception(e);
-                    this.setErrorMessage(WIZARD_APP_PAGE_APP_CLUSTER_NAMESPACE_ERROR);
+                } catch (Exception e) {
+                    this.setErrorMessage(
+                            WIZARD_APP_PAGE_APP_CLUSTER_NAMESPACE_ERROR);
+                    Util.showJobExceptionDialog(
+                            WIZARD_APP_PAGE_APP_CLUSTER_NAMESPACE_ERROR,
+                            parent.getShell(), e);
                 }
             }
         });
@@ -226,9 +233,10 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         Map<String, String> elbs = Collections.emptyMap();
         try {
             elbs = this.getRequestManger().getELBs();
-        } catch (IOException e) {
-            Logger.exception(e);
+        } catch (Exception e) {
             this.setErrorMessage(WIZARD_APP_PAGE_APP_ELB_ERROR);
+            Util.showJobExceptionDialog(WIZARD_APP_PAGE_APP_ELB_ERROR,
+                    parent.getShell(), e);
         }
 
         Combo elb = addDropdown(ConfigConstants.APP_ELB_ID,
@@ -238,9 +246,10 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         final Map<String, String> vpcs = new LinkedHashMap<>();
         try {
             vpcs.putAll(this.getRequestManger().getVPCs());
-        } catch (IOException e) {
-            Logger.exception(e);
+        } catch (Exception e) {
             this.setErrorMessage(WIZARD_APP_PAGE_APP_VPC_ERROR);
+            Util.showJobExceptionDialog(WIZARD_APP_PAGE_APP_VPC_ERROR,
+                    parent.getShell(), e);
         }
 
         Combo vpc = addDropdown(ConfigConstants.APP_VPC_ID,
@@ -259,9 +268,10 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
 
             try {
                 subnets.putAll(this.getRequestManger().getSubnets(vpcId));
-            } catch (IOException e) {
-                Logger.exception(e);
+            } catch (Exception e) {
                 this.setErrorMessage(WIZARD_APP_PAGE_APP_SUBNET_ERROR);
+                Util.showJobExceptionDialog(WIZARD_APP_PAGE_APP_SUBNET_ERROR,
+                        parent.getShell(), e);
             }
         }
 
@@ -288,9 +298,11 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
                     for (String s : subnets.values()) {
                         subnet.add(s);
                     }
-                } catch (IOException e) {
-                    Logger.exception(e);
+                } catch (Exception e) {
                     this.setErrorMessage(WIZARD_APP_PAGE_APP_SUBNET_ERROR);
+                    Util.showJobExceptionDialog(
+                            WIZARD_APP_PAGE_APP_SUBNET_ERROR, parent.getShell(),
+                            e);
                 }
             }
         });
@@ -299,9 +311,10 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         Map<String, String> sizes = Collections.emptyMap();
         try {
             sizes = this.getRequestManger().getAppTShirtSizes();
-        } catch (IOException e) {
-            Logger.exception(e);
+        } catch (Exception e) {
             this.setErrorMessage(WIZARD_APP_PAGE_APP_SIZE_ERROR);
+            Util.showJobExceptionDialog(WIZARD_APP_PAGE_APP_SIZE_ERROR,
+                    parent.getShell(), e);
         }
 
         Combo size = addDropdown(ConfigConstants.APP_SIZE_OPTION,
