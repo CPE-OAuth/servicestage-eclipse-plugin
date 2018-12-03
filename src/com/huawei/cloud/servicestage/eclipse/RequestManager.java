@@ -145,6 +145,7 @@ public class RequestManager {
         r.parameters.region = token.getRegion();
         r.parameters.version = ds.get(ConfigConstants.APP_VERSION);
         r.parameters.type = ds.get(ConfigConstants.APP_TYPE_OPTION);
+        r.parameters.platformType = "cce"; // hardcode cce for now since the current plugin supports cce only
         r.parameters.displayName = ds.get(ConfigConstants.APP_DISPLAY_NAME);
         r.parameters.listenerPort = ds.getInt(ConfigConstants.APP_PORT);
         r.parameters.desc = ds.get(ConfigConstants.APP_DESCRIPTION);
