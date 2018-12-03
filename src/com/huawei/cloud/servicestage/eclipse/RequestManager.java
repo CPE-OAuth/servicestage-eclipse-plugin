@@ -214,8 +214,6 @@ public class RequestManager {
 
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
-        r.serviceId = store.getString(PreferenceConstants.SERVICE_ID);
-
         r.parameters = new ServiceInstanceRequestBody.Parameters();
 
         LocalDateTime dt = LocalDateTime.now();
