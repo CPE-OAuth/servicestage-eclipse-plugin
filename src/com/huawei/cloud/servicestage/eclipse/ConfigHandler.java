@@ -38,6 +38,13 @@ public class ConfigHandler extends ServiceStageHandler {
             return result;
         }
 
+        // if using RequestManager.getInstance(), then some of the data
+        // is persisted and opening the config dialog is faster
+        // however, if the user makes a change a resource on the Huawei Cloud
+        // these changes will not be picked up until eclipse is restarted
+        // for now, create a new RequestManager each time until a
+        // refresh button is added - this will force a refresh of the
+        // persisted data
         // RequestManager requestManager = RequestManager.getInstance();
         RequestManager requestManager = new RequestManager();
 
@@ -45,6 +52,14 @@ public class ConfigHandler extends ServiceStageHandler {
         Wizard wizard = new ConfigWizard(project);
         wizard.addPage(new AppConfigWizardPage(requestManager));
         wizard.addPage(new ServicesConfigWizardPage(requestManager));
+        /*- ExtendedParamsConfigWizardPage is not being added here b/c it 
+        depends on a value from AppConfigWizardPage, however, if we
+        add the page here, it doesn't have that value yet
+        to get around this, ExtendedParamsConfigWizardPage is added
+        in the getNextPage method of ServicesConfigWizardPage
+        this means when the ExtendedParamsConfigWizardPage object is created
+        it has access to the value needed from AppConfigWizardPage */
+        // wizard.addPage(new ExtendedParamsConfigWizardPage(requestManager));
         WizardDialog dialog = new WizardDialog(window.getShell(), wizard);
 
         // needs to be opened inside an Action b/c it will be opened by another

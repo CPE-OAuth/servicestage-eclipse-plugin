@@ -43,6 +43,22 @@ public class ConfigConstants {
 
     public static final String APP_TYPE_OPTION = "type";
 
+    public static final String APP_CATEGORY_OPTION = "category";
+
+    public static final String APP_CATEGORY_SERVICECOMB = "ServiceComb";
+
+    public static final String APP_CATEGORY_PAAS_CSE_SC_ENDPOINT = "PAAS_CSE_SC_ENDPOINT";
+
+    public static final String APP_CATEGORY_PAAS_CSE_CC_ENDPOINT = "PAAS_CSE_CC_ENDPOINT";
+
+    public static final String APP_CATEGORY_WEBAPP = "Webapp";
+
+    public static final String APP_CATEGORY_MAGENTO = "Magento";
+
+    public static final String APP_CATEGORY_WORDPRESS = "WordPress";
+
+    public static final String APP_CATEGORY_MOBILE = "Mobile";
+
     public static final String APP_SIZE_OPTION = "size.id";
 
     public static final String APP_REPLICAS = "size.replica";
@@ -88,4 +104,8 @@ public class ConfigConstants {
     public static final String DCS_ID = "distributed_session.id";
 
     public static final String DCS_PASSWORD = "distributed_session.parameters.password";
+
+    public static final String EXTENDED_PARAM_KEYS = "extended_param_keys";
+
+    public static final String EXTENDED_PARAM_VALUES = "extended_param_values";
 }

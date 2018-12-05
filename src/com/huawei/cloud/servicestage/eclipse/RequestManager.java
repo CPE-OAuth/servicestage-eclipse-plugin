@@ -145,12 +145,20 @@ public class RequestManager {
         r.parameters.region = token.getRegion();
         r.parameters.version = ds.get(ConfigConstants.APP_VERSION);
         r.parameters.type = ds.get(ConfigConstants.APP_TYPE_OPTION);
-        r.parameters.platformType = "cce"; // hardcode cce for now since the current plugin supports cce only
+        r.parameters.category = ds.get(ConfigConstants.APP_CATEGORY_OPTION);
+        r.parameters.platformType = "cce"; // hardcode cce for now since the
+                                           // current plugin supports cce only
         r.parameters.displayName = ds.get(ConfigConstants.APP_DISPLAY_NAME);
         r.parameters.listenerPort = ds.getInt(ConfigConstants.APP_PORT);
         r.parameters.desc = ds.get(ConfigConstants.APP_DESCRIPTION);
         r.parameters.size.id = ds.get(ConfigConstants.APP_SIZE_OPTION);
         r.parameters.size.replica = ds.getInt(ConfigConstants.APP_REPLICAS);
+
+        Map<String, String> extParams = Util.arraysToMap(
+                ds.getArray(ConfigConstants.EXTENDED_PARAM_KEYS),
+                ds.getArray(ConfigConstants.EXTENDED_PARAM_VALUES));
+        r.parameters.extendedParam = extParams.isEmpty() ? null : extParams;
+
         r.parameters.source.type = ds.get(ConfigConstants.SOURCE_TYPE_OPTION);
         r.parameters.source.repoUrl = ds.get(ConfigConstants.SOURCE_PATH);
         r.parameters.source.secuToken = ds
@@ -158,11 +166,13 @@ public class RequestManager {
         r.parameters.source.repoNamespace = ds
                 .get(ConfigConstants.SOURCE_NAMESPACE);
         r.parameters.source.projBranch = ds.get(ConfigConstants.SOURCE_BRANCH);
+
         r.parameters.platforms.vpc.id = ds.get(ConfigConstants.APP_VPC_ID);
         r.parameters.platforms.vpc.parameters.subnet.id = ds
                 .get(ConfigConstants.APP_SUBNET_ID);
         r.parameters.platforms.cce.id = ds.get(ConfigConstants.APP_CLUSTER_ID);
-        r.parameters.platforms.cce.parameters.namespace = ds.get(ConfigConstants.APP_CCE_NAMESPACE);
+        r.parameters.platforms.cce.parameters.namespace = ds
+                .get(ConfigConstants.APP_CCE_NAMESPACE);
         r.parameters.platforms.elb.id = ds.get(ConfigConstants.APP_ELB_ID);
 
         if (ds.get(ConfigConstants.DCS_ID) == null
@@ -211,8 +221,6 @@ public class RequestManager {
     private ServiceInstanceRequestBody getUpdateAppRequestBody(
             IDialogSettings ds, Token token) {
         ServiceInstanceRequestBody r = new ServiceInstanceRequestBody();
-
-        IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
         r.parameters = new ServiceInstanceRequestBody.Parameters();
 
@@ -585,12 +593,12 @@ public class RequestManager {
 
     /**
      * Get application task longs
+     * 
      * @param project
      * @return
      * @throws IOException
      */
-    public String getApplicationTaskLogs(IProject project)
-            throws IOException {
+    public String getApplicationTaskLogs(IProject project) throws IOException {
         Token token = getAuthToken();
         IDialogSettings ds = Util.loadDialogSettings(project);
 

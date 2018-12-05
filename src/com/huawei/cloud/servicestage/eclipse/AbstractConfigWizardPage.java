@@ -39,13 +39,16 @@ import org.eclipse.swt.widgets.Text;
  * @author Farhan Arshad
  */
 public abstract class AbstractConfigWizardPage extends WizardPage {
-
     private RequestManager requestManger = null;
 
     protected AbstractConfigWizardPage(String pageName,
             RequestManager requestManger) {
         super(pageName);
         this.requestManger = requestManger;
+    }
+
+    public Map<String, String> getExtendedParams() {
+        return ((ConfigWizard) this.getWizard()).getExtendedParams();
     }
 
     protected Composite createContainer(Composite parent) {
@@ -322,7 +325,7 @@ public abstract class AbstractConfigWizardPage extends WizardPage {
 
         GridData gd = new GridData();
         gd.horizontalSpan = 1;
-        gd.widthHint = largestLength * 10;
+        gd.widthHint = largestLength * 11;
         comboDropDown.setLayoutData(gd);
 
         comboDropDown.addModifyListener(

@@ -21,6 +21,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -199,6 +200,19 @@ public class ServicesConfigWizardPage extends AbstractConfigWizardPage
 
     @Override
     protected int getPageLabelWidth() {
-        return 125;
+        return 130;
+    }
+
+    /**
+     * ExtendedParamsConfigWizardPage is added here b/c it depends on a value
+     * from AppConfigWizardPage, if we create the object here, we will have
+     * access to that value
+     */
+    @Override
+    public IWizardPage getNextPage() {
+        ExtendedParamsConfigWizardPage next = new ExtendedParamsConfigWizardPage(
+                this.getRequestManger());
+        next.setWizard(this.getWizard());
+        return next;
     }
 }

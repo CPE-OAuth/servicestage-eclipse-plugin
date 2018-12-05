@@ -74,6 +74,12 @@ public interface Resources {
     static final String WIZARD_APP_PAGE_APP_TYPE_ERROR = Activator
             .getResourceString("wizard.appPage.appTypeError");
 
+    static final String WIZARD_APP_PAGE_APP_CATEGORY = Activator
+            .getResourceString("wizard.appPage.appCategory");
+
+    static final String WIZARD_APP_PAGE_APP_CATEGORY_ERROR = Activator
+            .getResourceString("wizard.appPage.appCategoryError");
+
     static final String WIZARD_APP_PAGE_PLATFORM_GROUP_NAME = Activator
             .getResourceString("wizard.appPage.platformGroupName");
 
@@ -170,6 +176,16 @@ public interface Resources {
 
     static final String WIZARD_SERVICES_PAGE_RDS_DB_PASSWORD = Activator
             .getResourceString("wizard.servicesPage.rdsDbPassword");
+
+    // Ext Params Wizard Page
+    static final String WIZARD_EXT_PARAMS_PAGE_PAGE_NAME = Activator
+            .getResourceString("wizard.extParamsPage.pageName");
+
+    static final String WIZARD_EXT_PARAMS_PAGE_TITLE = Activator
+            .getResourceString("wizard.extParamsPage.title");
+
+    static final String WIZARD_EXT_PARAMS_PAGE_DESCRIPTION = Activator
+            .getResourceString("wizard.extParamsPage.description");
 
     // Dialogs
     static final String DIALOG_NO_RESOURCE_SELECTED_TITLE = Activator

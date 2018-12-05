@@ -26,10 +26,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
@@ -60,10 +65,29 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
 
         // service instance id is auto generated as a uuid and can not be
         // modified
-        addField(ConfigConstants.SERVICE_INSTANCE_ID,
+        Text sid = addField(ConfigConstants.SERVICE_INSTANCE_ID,
                 WIZARD_APP_PAGE_SERVICE_INSTANCE_ID,
                 UUID.randomUUID().toString(), false, true,
                 serviceInstanceGroup);
+
+        Label label = new Label(serviceInstanceGroup, SWT.NONE);
+        GridData gd = new GridData();
+        gd.widthHint = 100;
+        label.setLayoutData(gd);
+        Button button = new Button(serviceInstanceGroup, SWT.NONE);
+        button.setText("Reset ID");
+        button.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+
+        button.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetSelected(SelectionEvent arg0) {
+                sid.setText(UUID.randomUUID().toString());
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent arg0) {
+            }
+        });
 
         //
         // application group
@@ -125,6 +149,23 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
 
         Combo type = addDropdown(ConfigConstants.APP_TYPE_OPTION,
                 WIZARD_APP_PAGE_APP_TYPE, types, true, true, appGroup);
+
+        // category
+        Map<String, String> categories = new LinkedHashMap<String, String>();
+        categories.put(ConfigConstants.APP_CATEGORY_WEBAPP,
+                ConfigConstants.APP_CATEGORY_WEBAPP);
+        categories.put(ConfigConstants.APP_CATEGORY_WORDPRESS,
+                ConfigConstants.APP_CATEGORY_WORDPRESS);
+        categories.put(ConfigConstants.APP_CATEGORY_SERVICECOMB,
+                ConfigConstants.APP_CATEGORY_SERVICECOMB);
+        categories.put(ConfigConstants.APP_CATEGORY_MAGENTO,
+                ConfigConstants.APP_CATEGORY_MAGENTO);
+        categories.put(ConfigConstants.APP_CATEGORY_MOBILE,
+                ConfigConstants.APP_CATEGORY_MOBILE);
+
+        Combo category = addDropdown(ConfigConstants.APP_CATEGORY_OPTION,
+                WIZARD_APP_PAGE_APP_CATEGORY, categories, true, true, appGroup);
+        category.setText(ConfigConstants.APP_CATEGORY_WEBAPP);
 
         // port
         Spinner port = addSpinner(ConfigConstants.APP_PORT,
@@ -333,6 +374,7 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
                         && Util.isNotEmpty(displayName.getText())
                         && Util.isNotEmpty(version.getText())
                         && Util.isNotEmpty(type.getText())
+                        && Util.isNotEmpty(category.getText())
                         && Util.isNotEmpty(port.getText())
                         && Util.isNotEmpty(repo.getText())
                         && Util.isNotEmpty(cce.getText())
@@ -353,6 +395,7 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         displayName.addListener(SWT.Modify, listener);
         version.addListener(SWT.Modify, listener);
         type.addListener(SWT.Modify, listener);
+        category.addListener(SWT.Modify, listener);
         port.addListener(SWT.Modify, listener);
         repo.addListener(SWT.Modify, listener);
         cce.addListener(SWT.Modify, listener);

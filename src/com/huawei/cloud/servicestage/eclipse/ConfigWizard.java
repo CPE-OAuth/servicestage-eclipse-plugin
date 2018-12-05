@@ -16,6 +16,9 @@
 package com.huawei.cloud.servicestage.eclipse;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -25,6 +28,13 @@ import org.eclipse.jface.wizard.Wizard;
  * @author Farhan Arshad
  */
 public class ConfigWizard extends Wizard implements Resources {
+
+    /**
+     * because we don't know the keys for ext params, we have to store
+     * them separately from DialogSettings, however, when writing the
+     * DialogSettings to a file, we also include the ext params
+     */
+    private final Map<String, String> extendedParams = new LinkedHashMap<>();
 
     private IProject project = null;
 
@@ -43,6 +53,25 @@ public class ConfigWizard extends Wizard implements Resources {
     @Override
     public boolean performFinish() {
         try {
+            if (getExtendedParams().entrySet().size() > 0) {
+                String[] keys = new String[getExtendedParams().entrySet()
+                        .size()];
+                String[] values = new String[getExtendedParams().entrySet()
+                        .size()];
+                int i = 0;
+                for (Entry<String, String> entry : getExtendedParams()
+                        .entrySet()) {
+                    keys[i] = entry.getKey();
+                    values[i] = entry.getValue();
+                    i++;
+                }
+
+                getDialogSettings().put("extended_param_keys", keys);
+                getDialogSettings().put("extended_param_values", values);
+            } else {
+                getDialogSettings().put("extended_param_keys", new String[0]);
+                getDialogSettings().put("extended_param_values", new String[0]);
+            }
             Util.saveDialogSettings(project, getDialogSettings());
         } catch (IOException e) {
             Util.showExceptionDialog("Unable to save settings", getShell(), e);
@@ -52,4 +81,7 @@ public class ConfigWizard extends Wizard implements Resources {
         return true;
     }
 
+    public Map<String, String> getExtendedParams() {
+        return extendedParams;
+    }
 }

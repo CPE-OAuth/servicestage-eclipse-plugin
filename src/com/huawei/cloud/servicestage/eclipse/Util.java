@@ -32,6 +32,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -293,5 +294,26 @@ public class Util implements Resources {
         }
 
         return zipfilePath;
+    }
+
+    /**
+     * Converts the provided array of keys and values to a map. The order is
+     * kept as-is.
+     * 
+     * @param keys
+     * @param values
+     * @return
+     */
+    public static Map<String, String> arraysToMap(String[] keys,
+            String[] values) {
+        Map<String, String> map = new LinkedHashMap<>();
+
+        if (keys != null && values != null && keys.length == values.length) {
+            for (int i = 0; i < keys.length; i++) {
+                map.put(keys[i], values[i]);
+            }
+        }
+
+        return map;
     }
 }
