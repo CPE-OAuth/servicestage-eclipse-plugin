@@ -29,12 +29,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
@@ -70,13 +70,23 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
                 UUID.randomUUID().toString(), false, true,
                 serviceInstanceGroup);
 
-        Label label = new Label(serviceInstanceGroup, SWT.NONE);
-        GridData gd = new GridData();
-        gd.widthHint = 100;
-        label.setLayoutData(gd);
+        GridLayout layout = new GridLayout();
+        layout.numColumns = 3;
+        serviceInstanceGroup.setLayout(layout);
+
+        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.widthHint = 400;
+        serviceInstanceGroup.setLayoutData(gd);
+
+        gd = new GridData();
+        gd.widthHint = 325;
+        sid.setLayoutData(gd);
+
         Button button = new Button(serviceInstanceGroup, SWT.NONE);
         button.setText("Reset ID");
-        button.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+        gd = new GridData();
+        gd.widthHint = 100;
+        button.setLayoutData(gd);
 
         button.addSelectionListener(new SelectionListener() {
             @Override
