@@ -175,7 +175,10 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
 
         Combo category = addDropdown(ConfigConstants.APP_CATEGORY_OPTION,
                 WIZARD_APP_PAGE_APP_CATEGORY, categories, true, true, appGroup);
-        category.setText(ConfigConstants.APP_CATEGORY_WEBAPP);
+
+        if (category.getText() == null || category.getText().isEmpty()) {
+            category.setText(ConfigConstants.APP_CATEGORY_WEBAPP);
+        }
 
         // port
         Spinner port = addSpinner(ConfigConstants.APP_PORT,
