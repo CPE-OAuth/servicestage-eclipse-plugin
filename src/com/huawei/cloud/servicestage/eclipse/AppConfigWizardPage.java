@@ -63,13 +63,6 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         Group serviceInstanceGroup = createGroup(container,
                 WIZARD_APP_PAGE_SERVICE_INSTANCE_GROUP_NAME);
 
-        // service instance id is auto generated as a uuid and can not be
-        // modified
-        Text sid = addField(ConfigConstants.SERVICE_INSTANCE_ID,
-                WIZARD_APP_PAGE_SERVICE_INSTANCE_ID,
-                UUID.randomUUID().toString(), false, true,
-                serviceInstanceGroup);
-
         GridLayout layout = new GridLayout();
         layout.numColumns = 3;
         serviceInstanceGroup.setLayout(layout);
@@ -77,6 +70,13 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.widthHint = 400;
         serviceInstanceGroup.setLayoutData(gd);
+
+        // service instance id is auto generated as a uuid and can not be
+        // modified
+        Text sid = addField(ConfigConstants.SERVICE_INSTANCE_ID,
+                WIZARD_APP_PAGE_SERVICE_INSTANCE_ID,
+                UUID.randomUUID().toString(), false, true,
+                serviceInstanceGroup);
 
         gd = new GridData();
         gd.widthHint = 325;
