@@ -58,11 +58,14 @@ Now you can create your own application projects, each project in your workspace
 1. Provide the SWR repo where files will be uploaded before they can be deployed
 1. Select Platform information such as Cluster ID, ELB ID, VPC ID
 1. Provide information about services that your application uses
+1. Provide optional environment variables for your application (Note: some application Categories have mandatory environment variables)
 1. Click Finish. The project's `servicestage.xml` file will be created/updated
 
 ![App Settings](./img/3.app-settings.png)
 
 ![Service Settings](./img/4.services-settings.png)
+
+![Environment Variables](./img/2.env-vars.png)
 
 ### 3. Deploy
 
@@ -81,6 +84,8 @@ The deployment process is as follows:
 1. The deployment is monitored until it completes and the application URL is provided at the end
 
 If there is an issue with the deployment at any stage, a dialog appears showing the reason for the failure. You can also view the `Error log` view for details.
+
+If you the deployment fails, or the application is deleted from the ServiceStage Web Console, you will need to use a new ID to redeploy the application. This can be done by opening the Configure dialog again, and clicking Reset ID, then Finish.
 
 ### 4. Status
 
