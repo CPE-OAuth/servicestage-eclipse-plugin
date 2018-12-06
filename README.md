@@ -36,7 +36,7 @@ At this moment, the plugin must be installed manually.  Once you have the Servic
 Usage
 -----
 
-*Note:* you may use the right-click context menu, tool bar or the main menu to perform the Configure, Deploy, and Status actions. Deploy will only be visible when a war file or a Node.js project are selected.
+*Note:* you may use the right-click context menu, tool bar or the main menu to perform the Configure, Deploy, and Status actions. Deploy will only be visible when a java war/jar file or a Node.js project are selected.
 
 ### 1. Configure Preferences
 
@@ -51,7 +51,7 @@ The page also provides a `Reset Token` button, if you are having issues later, i
 
 ### 2. Configure Application
 
-Now you can create your own application projects, each project in your workspace will have a different set of ServiceStage settings associated with it. These settings will be stored in `servicestage.xml` at the project root. Note: this plugin currently only supports tomcat and node.js applications.
+Now you can create your own application projects, each project in your workspace will have a different set of ServiceStage settings associated with it. These settings will be stored in `servicestage.xml` at the project root. Note: this plugin currently supports tomcat WAR file, Java Jar package and node.js or PHP applications zip packages.
 
 1. Right-click the project and select `ServiceStage > Configure`
 1. Fill in the application information
