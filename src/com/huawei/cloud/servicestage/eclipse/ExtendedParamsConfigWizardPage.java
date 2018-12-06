@@ -41,9 +41,9 @@ public class ExtendedParamsConfigWizardPage extends AbstractConfigWizardPage
         implements Resources {
 
     protected ExtendedParamsConfigWizardPage(RequestManager requestManger) {
-        super(WIZARD_SERVICES_PAGE_PAGE_NAME, requestManger);
-        setTitle(WIZARD_SERVICES_PAGE_TITLE);
-        setDescription(WIZARD_SERVICES_PAGE_DESCRIPTION);
+        super(WIZARD_EXT_PARAMS_PAGE_PAGE_NAME, requestManger);
+        setTitle(WIZARD_EXT_PARAMS_PAGE_TITLE);
+        setDescription(WIZARD_EXT_PARAMS_PAGE_DESCRIPTION);
     }
 
     public Map<String, String> getExtendedParams() {
@@ -100,16 +100,7 @@ public class ExtendedParamsConfigWizardPage extends AbstractConfigWizardPage
         String category = getDialogSettings()
                 .get(ConfigConstants.APP_CATEGORY_OPTION);
 
-        // since DialogSettings doesn't support a map, or a way to
-        // query all keys, use two arrays where each index is a key-value
-        // pair
-        String[] keys = getDialogSettings()
-                .getArray(ConfigConstants.EXTENDED_PARAM_KEYS);
-        String[] values = getDialogSettings()
-                .getArray(ConfigConstants.EXTENDED_PARAM_VALUES);
-
-        Map<String, String> extendedParams = Util.arraysToMap(keys, values);
-        extendedParams.putAll(super.getExtendedParams());
+        Map<String, String> extendedParams = super.getExtendedParams();
 
         Set<Text> mandatory = new HashSet<>();
 
