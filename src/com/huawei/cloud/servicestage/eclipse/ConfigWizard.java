@@ -16,7 +16,6 @@
 package com.huawei.cloud.servicestage.eclipse;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -34,7 +33,7 @@ public class ConfigWizard extends Wizard implements Resources {
      * them separately from DialogSettings, however, when writing the
      * DialogSettings to a file, we also include the ext params
      */
-    private final Map<String, String> extendedParams = new LinkedHashMap<>();
+    private Map<String, String> extendedParams = new LinkedHashMap<>();
 
     private IProject project = null;
 
@@ -45,6 +44,16 @@ public class ConfigWizard extends Wizard implements Resources {
         try {
             settings = Util.loadDialogSettings(project);
             setDialogSettings(settings);
+
+            // since DialogSettings doesn't support a map, or a way to
+            // query all keys, use two arrays where each index is a key-value
+            // pair
+            String[] keys = getDialogSettings()
+                    .getArray(ConfigConstants.EXTENDED_PARAM_KEYS);
+            String[] values = getDialogSettings()
+                    .getArray(ConfigConstants.EXTENDED_PARAM_VALUES);
+
+            extendedParams = Util.arraysToMap(keys, values);
         } catch (IOException e) {
             Util.showExceptionDialog("Unable to load settings", getShell(), e);
         }
