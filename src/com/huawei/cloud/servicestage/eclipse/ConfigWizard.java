@@ -33,7 +33,7 @@ public class ConfigWizard extends Wizard implements Resources {
      * them separately from DialogSettings, however, when writing the
      * DialogSettings to a file, we also include the ext params
      */
-    private Map<String, String> extendedParams = new LinkedHashMap<>();
+    private Map<String, String> extendedParams;
 
     private IProject project = null;
 
