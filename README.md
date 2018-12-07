@@ -51,7 +51,7 @@ The page also provides a `Reset Token` button, if you are having issues later, i
 
 ### 2. Configure Application
 
-Now you can create your own application projects, each project in your workspace will have a different set of ServiceStage settings associated with it. These settings will be stored in `servicestage.xml` at the project root. Note: this plugin currently supports tomcat WAR file, Java Jar package and node.js or PHP applications zip packages.
+Now you can create your own application projects, each project in your workspace will have a different set of ServiceStage settings associated with it. These settings will be stored in `servicestage.xml` at the project root. Note: this plugin currently supports tomcat WAR file, Java Jar package and node.js or PHP applications.
 
 1. Right-click the project and select `ServiceStage > Configure`
 1. Fill in the application information
