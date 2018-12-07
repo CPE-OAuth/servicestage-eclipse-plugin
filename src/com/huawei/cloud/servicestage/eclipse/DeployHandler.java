@@ -46,16 +46,20 @@ public class DeployHandler extends ServiceStageHandler {
 
         Shell shell = window.getShell();
 
+        File settingsFile = Util.getSettingsFile(project);
+
+        if (settingsFile == null || !settingsFile.exists()) {
+            MessageDialog.openError(shell, DIALOG_NO_SETTINGS_FILE_TITLE,
+                    DIALOG_NO_SETTINGS_FILE_MESSAGE);
+            return -1;
+        }
+
         // a file or a project can be deployed
         // if the project is supported, it will be zipped and the zip file will
         // be deployed
-        boolean supportedProject = false;
-        try {
-            supportedProject = this.project
-                    .getNature("org.eclipse.wst.jsdt.core.jsNature") != null;
-        } catch (CoreException e) {
-            Logger.exception("Error getting project nature.", e);
-        }
+        boolean supportedProject = hasNature(this.project,
+                "org.eclipse.wst.jsdt.core.jsNature")
+                || hasNature(this.project, "org.eclipse.php.core.PHPNature");
 
         // make sure a either file is selected, or project is supported
         if (this.file == null && !supportedProject) {
@@ -246,5 +250,13 @@ public class DeployHandler extends ServiceStageHandler {
         job.schedule();
 
         return 0;
+    }
+
+    private boolean hasNature(IProject project, String natureId) {
+        try {
+            return project.getNature(natureId) != null;
+        } catch (CoreException e) {
+            return false;
+        }
     }
 }
