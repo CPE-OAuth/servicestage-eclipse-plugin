@@ -188,6 +188,12 @@ public interface Resources {
             .getResourceString("wizard.extParamsPage.description");
 
     // Dialogs
+    static final String DIALOG_NO_SETTINGS_FILE_TITLE = Activator
+            .getResourceString("dialog.noSettingsFileTitle");
+
+    static final String DIALOG_NO_SETTINGS_FILE_MESSAGE = Activator
+            .getResourceString("dialog.noSettingsFileMessage");
+
     static final String DIALOG_NO_RESOURCE_SELECTED_TITLE = Activator
             .getResourceString("dialog.noResourceSelectedTitle");
 
