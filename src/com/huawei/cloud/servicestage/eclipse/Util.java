@@ -223,7 +223,7 @@ public class Util implements Resources {
 
     public static String createZipFile(IProject project) throws IOException {
         return createZipFile(
-                Paths.get(project.getRawLocation().makeAbsolute().toString()));
+                Paths.get(project.getLocation().makeAbsolute().toString()));
     }
 
     /**
