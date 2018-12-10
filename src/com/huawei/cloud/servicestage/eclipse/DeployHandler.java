@@ -127,7 +127,7 @@ public class DeployHandler extends ServiceStageHandler {
 
                     Logger.info(
                             "Uploaded " + localFilePath + " to " + uploadUrl);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     // error while uploading
                     Util.showJobExceptionDialog(ERROR, JOB_DEPLOY_UPLOAD_FAILED,
                             shell, e);
@@ -156,7 +156,7 @@ public class DeployHandler extends ServiceStageHandler {
 
                     Logger.info(
                             "Deployment request accepted. Monitoring status now...");
-                } catch (IOException e) {
+                } catch (Exception e) {
                     // error while deploying
                     Util.showJobExceptionDialog(JOB_DEPLOY_DEPLOY_FAILED, shell,
                             e);
@@ -199,7 +199,7 @@ public class DeployHandler extends ServiceStageHandler {
                             return Status.OK_STATUS;
                         }
                     }
-                } catch (InterruptedException | IOException e) {
+                } catch (Exception e) {
                     // error while monitoring
                     Util.showJobExceptionDialog(JOB_DEPLOY_MONITOR_ERROR, shell,
                             e);
@@ -238,7 +238,7 @@ public class DeployHandler extends ServiceStageHandler {
                     // deployment was successful
                     Util.showJobInfoDialog(SUCCESSFUL, message, shell);
                     return Status.OK_STATUS;
-                } catch (IOException e) {
+                } catch (Exception e) {
                     // getting app url failed
                     Util.showJobExceptionDialog(JOB_DEPLOY_URL_FAILED, shell,
                             e);
