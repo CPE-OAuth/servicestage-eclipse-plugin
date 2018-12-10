@@ -218,7 +218,7 @@ public class DeployHandler extends ServiceStageHandler {
                         Util.showJobInfoDialog(FAILED, JOB_DEPLOY_DEPLOY_FAILED,
                                 taskLogs, shell);
                         return Status.OK_STATUS;
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         Util.showJobExceptionDialog(JOB_DEPLOY_MONITOR_ERROR,
                                 shell, e);
                         return Status.OK_STATUS;
