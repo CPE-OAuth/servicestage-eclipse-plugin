@@ -248,7 +248,7 @@ public class Util implements Resources {
 
         new File(zipfilePath).deleteOnExit();
 
-        URI uri = URI.create("jar:file:" + zipfilePath);
+        URI uri = URI.create("jar:file:///" + zipfilePath.replace('\\','/'));
 
         try (FileSystem zipfs = FileSystems.newFileSystem(uri, env)) {
             Iterable<Path> roots = zipfs.getRootDirectories();
