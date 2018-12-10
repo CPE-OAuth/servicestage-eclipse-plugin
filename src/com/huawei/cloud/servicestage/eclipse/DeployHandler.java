@@ -76,7 +76,7 @@ public class DeployHandler extends ServiceStageHandler {
         if (supportedProject) {
             try {
                 lfp = Util.createZipFile(this.project);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 Util.showExceptionDialog("Error creating project zip file.",
                         shell, e);
                 return -1;
