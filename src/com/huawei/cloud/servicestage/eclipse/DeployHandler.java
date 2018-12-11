@@ -71,7 +71,8 @@ public class DeployHandler extends ServiceStageHandler {
 
         // get file path
         String dialogMessage = null;
-        String lfp = null;
+        String lfp = null; // temp var for localFilePath (can't be final)
+        String sn = null; // temp var for sourceName (can't be final)
         if (supportedProject) {
             try {
                 lfp = Util.createZipFile(this.project);
@@ -82,14 +83,17 @@ public class DeployHandler extends ServiceStageHandler {
             }
             dialogMessage = String.format(DIALOG_DEPLOY_MESSAGE,
                     this.project.getName());
+            sn = this.project.getName();
         } else if (this.file != null) {
-            lfp = file.getRawLocation().makeAbsolute().toString();
+            lfp = this.file.getRawLocation().makeAbsolute().toString();
             dialogMessage = String.format(DIALOG_DEPLOY_MESSAGE,
-                    file.getProjectRelativePath().toString());
+                    this.file.getProjectRelativePath().toString());
+            sn = this.file.getProjectRelativePath().toString();
         }
 
         // final needed
         final String localFilePath = lfp;
+        final String sourceName = sn;
 
         // ask user to confirm deployment
         boolean answer = MessageDialog.openConfirm(shell, DIALOG_DEPLOY_TITLE,
@@ -231,8 +235,11 @@ public class DeployHandler extends ServiceStageHandler {
                     String url = RequestManager.getInstance()
                             .getApplicationUrl(project);
 
-                    String message = String.format(JOB_DEPLOY_SUCCESSFUL,
-                            localFilePath, url);
+                    String message = Util.isEmpty(url)
+                            ? String.format(JOB_DEPLOY_SUCCESSFUL_NO_URL,
+                                    sourceName)
+                            : String.format(JOB_DEPLOY_SUCCESSFUL, sourceName,
+                                    url);
 
                     // deployment was successful
                     Util.showJobInfoDialog(SUCCESSFUL, message, shell);

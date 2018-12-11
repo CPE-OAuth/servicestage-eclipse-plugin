@@ -249,6 +249,9 @@ public interface Resources {
     static final String JOB_DEPLOY_SUCCESSFUL = Activator
             .getResourceString("job.deploy.successful");
 
+    static final String JOB_DEPLOY_SUCCESSFUL_NO_URL = Activator
+            .getResourceString("job.deploy.successfulNoUrl");
+
     // General
     static final String INFO = Activator.getResourceString("info");
 

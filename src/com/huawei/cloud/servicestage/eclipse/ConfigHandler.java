@@ -15,9 +15,6 @@
  */
 package com.huawei.cloud.servicestage.eclipse;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.SubMonitor;
@@ -81,7 +78,7 @@ public class ConfigHandler extends ServiceStageHandler {
                 subMonitor.worked(10);
                 try {
                     requestManager.load(subMonitor.newChild(90));
-                } catch (IOException e) {
+                } catch (Exception e) {
                     Util.showJobExceptionDialog(e.getMessage(),
                             window.getShell(), e);
                     return;
@@ -94,7 +91,7 @@ public class ConfigHandler extends ServiceStageHandler {
                     });
                 }
             });
-        } catch (InterruptedException | InvocationTargetException e) {
+        } catch (Exception e) {
             Util.showJobExceptionDialog(e.getMessage(), window.getShell(), e);
         }
 

@@ -174,7 +174,7 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
                 ConfigConstants.APP_CATEGORY_MOBILE);
 
         Combo category = addDropdown(ConfigConstants.APP_CATEGORY_OPTION,
-                WIZARD_APP_PAGE_APP_CATEGORY, categories, true, true, appGroup);
+                WIZARD_APP_PAGE_APP_CATEGORY, categories, false, true, appGroup);
 
         if (category.getText() == null || category.getText().isEmpty()) {
             category.setText(ConfigConstants.APP_CATEGORY_WEBAPP);
