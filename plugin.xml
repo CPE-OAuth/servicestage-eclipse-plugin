@@ -6,7 +6,7 @@
 		<page
 			class="com.huawei.cloud.servicestage.eclipse.preferences.HuaweiPreferencePage"
 			id="com.huawei.cloud.servicestage.eclipse.preferences.HuaweiPreferencePage"
-			name="Huawei">
+			name="%preferencepage.name">
 		</page>
 	</extension>
 	<extension point="org.eclipse.core.runtime.preferences">
@@ -18,21 +18,21 @@
 		point="org.eclipse.ui.commands">
 		<category
 			id="com.huawei.cloud.servicestage.eclipse.commands.category"
-			name="Huawei">
+			name="%command.category.name">
 		</category>
 		<command
 			categoryId="com.huawei.cloud.servicestage.eclipse.commands.category"
-			name="Configure"
+			name="%command.configure.name"
 			id="com.huawei.cloud.servicestage.eclipse.commands.configureCommand">
 		</command>
 		<command
 			categoryId="com.huawei.cloud.servicestage.eclipse.commands.category"
-			name="Deploy"
+			name="%command.deploy.name"
 			id="com.huawei.cloud.servicestage.eclipse.commands.deployCommand">
 		</command>
 		<command
 			categoryId="com.huawei.cloud.servicestage.eclipse.commands.category"
-			name="Status"
+			name="%command.status.name"
 			id="com.huawei.cloud.servicestage.eclipse.commands.statusCommand">
 		</command>
 	</extension>
@@ -164,7 +164,7 @@
 			locationURI="popup:org.eclipse.ui.popup.any?after=additions">
 			<menu
 				id="com.huawei.cloud.servicestage.eclipse.menus.servicestage"
-				label="ServiceStage"
+				label="%menus.servicestage.label"
 				icon="icons/servicestage.png"
 				mnemonic="S">
 				<command
