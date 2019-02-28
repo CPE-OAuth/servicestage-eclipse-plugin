@@ -184,6 +184,26 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         Spinner port = addSpinner(ConfigConstants.APP_PORT,
                 WIZARD_APP_PAGE_PORT, 8080, 1, 99999, true, appGroup);
 
+        // app group
+        // app runtime types
+        Map<String, String> appGroups = Collections.emptyMap();
+        try {
+        	appGroups = this.getRequestManger().getAppGroups();
+        } catch (Exception e) {
+            this.setErrorMessage(WIZARD_APP_PAGE_APP_GROUP_ERROR);
+            Util.showJobExceptionDialog(WIZARD_APP_PAGE_APP_GROUP_ERROR,
+                    parent.getShell(), e);
+        }
+
+        Combo appGroupstype = addDropdown(ConfigConstants.APP_GROUP_ID,
+                WIZARD_APP_PAGE_APP_GROUP, appGroups, true, false, appGroup);
+                
+        appGroupstype.addModifyListener(event -> {
+        	int selectionIndex = appGroupstype.getSelectionIndex();
+        	String selectionLabel = appGroupstype.getText();
+        });
+        
+        
         //
         // swr upload info group
         //

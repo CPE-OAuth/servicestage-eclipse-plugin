@@ -71,7 +71,7 @@ public class RequestManagerTest {
         // add test token that expires in 2099
         String testTokenValue = "testToken";
         Token token = new Token(AuthHelper.USERNAME, AuthHelper.REGION,
-                testTokenValue, AuthHelper.TENANT_ID,
+                testTokenValue, AuthHelper.TENANT_ID, AuthHelper.DOMAIN,
                 Util.stringToDate("2099-08-23T21:40:09.922000Z"));
 
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();

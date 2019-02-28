@@ -42,6 +42,8 @@ public class ConfigConstants {
     public static final String APP_CCE_NAMESPACE = "cce.parameters.namespace";
 
     public static final String APP_TYPE_OPTION = "type";
+    
+    public static final String APP_GROUP_ID = "group_id";
 
     public static final String APP_CATEGORY_OPTION = "category";
 

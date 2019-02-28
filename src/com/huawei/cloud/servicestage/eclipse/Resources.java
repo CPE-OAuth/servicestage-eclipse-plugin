@@ -131,6 +131,12 @@ public interface Resources {
     static final String WIZARD_APP_PAGE_PORT = Activator
             .getResourceString("wizard.appPage.port");
 
+    static final String WIZARD_APP_PAGE_APP_GROUP = Activator
+            .getResourceString("wizard.appPage.appGroup");
+    
+    static final String WIZARD_APP_PAGE_APP_GROUP_ERROR = Activator
+            .getResourceString("wizard.appPage.appGroupError");
+    
     static final String WIZARD_SRC_PAGE_SWR_GROUP_NAME = Activator
             .getResourceString("wizard.srcPage.swrGroupName");
 
