@@ -15,8 +15,10 @@
  */
 package com.huawei.cloud.servicestage.eclipse;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -38,6 +40,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
+
+import com.google.gson.JsonObject;
 
 /**
  * @author Farhan Arshad
@@ -197,13 +201,9 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
 
         Combo appGroupstype = addDropdown(ConfigConstants.APP_GROUP_ID,
                 WIZARD_APP_PAGE_APP_GROUP, appGroups, true, false, appGroup);
+
+        final Map <String, String> checkGroupMap = appGroups; // for event listener below
                 
-        appGroupstype.addModifyListener(event -> {
-        	int selectionIndex = appGroupstype.getSelectionIndex();
-        	String selectionLabel = appGroupstype.getText();
-        });
-        
-        
         //
         // swr upload info group
         //
@@ -380,6 +380,57 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
                 }
             }
         });
+        
+        // App group selection update on VPC and Subnut
+        appGroupstype.addModifyListener(event -> {
+        	String selectionId = null;
+        	String selectionLabel = appGroupstype.getText();
+           
+            if (selectionLabel.isEmpty()) {
+            	// release VPC and Subnet inputs for user selection
+                vpc.setEnabled(true);
+                subnet.setEnabled(true);
+                return;
+            }
+           
+            Iterator<Map.Entry<String, String>> it = checkGroupMap.entrySet().iterator();
+            // first locate the group_id
+        	while (it.hasNext()) {
+        	    Map.Entry<String, String> entry = it.next();
+                if (entry.getValue().equals(selectionLabel)) {
+                	selectionId = entry.getKey();
+                }
+        	}
+        	// retrieve the platforms metadata of the group_id
+        	try {
+        		Map<String, JsonObject> groupMeta = this.getRequestManger().getAppGroupsMetaData();
+        		JsonObject meta = groupMeta.get(selectionId);
+        		if (meta!=null) {
+        			 String groupVPCid = meta.get("platforms").getAsJsonObject()
+        	            		.get("vpc").getAsJsonObject()
+        	            		.get("id").getAsString();
+        	         String groupSubnetId = meta.get("platforms").getAsJsonObject()
+        	            		.get("vpc").getAsJsonObject()
+        	            		.get("parameters").getAsJsonObject()
+        	            		.get("subnet").getAsJsonObject()
+        	            		.get("id").getAsString();
+        	         if (groupVPCid!=null && vpc!=null) {
+        	        	 String vpcText = vpcs.get(groupVPCid);
+        	        	 vpc.setText(vpcText.isEmpty()? "" : vpcText);
+        	        	 vpc.setEnabled(false); // force vpc selection to app group configuration
+        	         }
+        	         if (groupSubnetId!=null && subnets!=null) {
+        	        	 String subnetText = subnets.get(groupSubnetId);
+        	        	 subnet.setText(subnetText.isEmpty()? "" : subnetText);
+        	        	 subnet.setEnabled(false);  // force subnet selection to app group configuration
+        	         }
+        		}
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        });
+
 
         // app sizes
         Map<String, String> sizes = Collections.emptyMap();
