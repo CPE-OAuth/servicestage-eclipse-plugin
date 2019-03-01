@@ -255,10 +255,13 @@ public abstract class AbstractConfigWizardPage extends WizardPage {
                 comboDropDown.setText(savedIdDisplayName);
             } else {
                 // if combo is editable and we haven't found the entry in the
-                // provided values, then it must be a custom value, dispaly
+                // provided values, then it must be a custom value, display
                 // as-is
                 if (!readOnly) {
                     comboDropDown.setText(savedId);
+                } else {
+                	comboDropDown.clearSelection();
+                	getDialogSettings().put(id, "");
                 }
             }
         }
