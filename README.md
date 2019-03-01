@@ -40,12 +40,12 @@ Usage
 
 ### 1. Configure Preferences
 
-Configure Huawei Preferences (`Window > Preferences > Huawei`)
+Configure ServiceStage Preferences (`Window > Preferences > ServiceStage`)
 
 - Select the region
 - Provide username and password
 
-![Huawei Preferences](./img/1.huawei-preferences.png)
+![ServiceStage Preferences](./img/1.huawei-preferences.png)
 
 The page also provides a `Reset Token` button, if you are having issues later, it may help to reset the token.
 

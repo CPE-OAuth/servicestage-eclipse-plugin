@@ -29,14 +29,14 @@ public class AuthHelper {
 
     public static final String PASSWORD = "";
 
-    public static final String TENANT_ID = "";
+    public static final String TENANT_ID = ""; //domain
 
     private static AuthHelper instance = null;
 
     private Token token = null;
 
     protected AuthHelper() throws IOException {
-        this.token = AuthClient.getAuthToken(REGION, USERNAME, PASSWORD);
+        this.token = AuthClient.getAuthToken(REGION, USERNAME, PASSWORD, TENANT_ID);
         assertNotNull("Failed to get Auth Token.", this.token);
     }
 

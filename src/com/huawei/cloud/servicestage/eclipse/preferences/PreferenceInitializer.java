@@ -36,6 +36,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();
         store.setDefault(PreferenceConstants.USERNAME, "username");
         store.setDefault(PreferenceConstants.PASSWORD, "password");
+        store.setDefault(PreferenceConstants.DOMAIN, "");
 
         // these preferences can not be set at this time, use defaults
         store.setDefault(PreferenceConstants.SERVICESTAGE_API_URL,

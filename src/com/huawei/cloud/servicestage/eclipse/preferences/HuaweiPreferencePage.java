@@ -17,24 +17,30 @@ package com.huawei.cloud.servicestage.eclipse.preferences;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+
+import com.huawei.cloud.servicestage.client.Token;
 import com.huawei.cloud.servicestage.eclipse.Activator;
 import com.huawei.cloud.servicestage.eclipse.Logger;
 import com.huawei.cloud.servicestage.eclipse.RequestManager;
@@ -46,6 +52,12 @@ import com.huawei.cloud.servicestage.eclipse.Resources;
 public class HuaweiPreferencePage extends FieldEditorPreferencePage
         implements IWorkbenchPreferencePage, Resources {
 
+	private StringFieldEditor usernameInput;
+	private StringFieldEditor passwordInput;
+    private StringFieldEditor domainInput;
+    private String regionSelection;
+    
+   
     public HuaweiPreferencePage() {
         super(GRID);
         setPreferenceStore(Activator.getDefault().getPreferenceStore());
@@ -54,6 +66,7 @@ public class HuaweiPreferencePage extends FieldEditorPreferencePage
 
     @Override
     public void init(IWorkbench arg0) {
+    	setPreferenceStore(Activator.getDefault().getPreferenceStore());
     }
 
     @Override
@@ -78,20 +91,62 @@ public class HuaweiPreferencePage extends FieldEditorPreferencePage
         Group authenticationGroup = new Group(getFieldEditorParent(), SWT.NONE);
         initGroup(authenticationGroup);
 
-        addField(new StringFieldEditor(PreferenceConstants.USERNAME,
-                PREFERENCES_HUAWEI_USERNAME, authenticationGroup));
-        addField(new PasswordFieldEditor(PreferenceConstants.PASSWORD,
-                PREFERENCES_HUAWEI_PASSWORD, authenticationGroup));
+        
+        usernameInput = new StringFieldEditor(PreferenceConstants.USERNAME,
+                PREFERENCES_HUAWEI_USERNAME, authenticationGroup);
+        passwordInput = new PasswordFieldEditor(PreferenceConstants.PASSWORD,
+                PREFERENCES_HUAWEI_PASSWORD, authenticationGroup);
+        domainInput = new StringFieldEditor(PreferenceConstants.DOMAIN,
+                PREFERENCES_HUAWEI_DOMAIN, authenticationGroup);
+        
+        addField(usernameInput);
+        addField(passwordInput);
+        addField(domainInput);
 
-        addResetTokenButton(authenticationGroup);
+        addTokenButtonGroup(authenticationGroup);
     }
 
-    private void addResetTokenButton(Composite parent) {
-        Button resetTokenButton = new Button(parent, SWT.PUSH);
-        resetTokenButton.setText(PREFERENCES_HUAWEI_RESET_TOKEN);
-        resetTokenButton.setLayoutData(
-                new GridData(SWT.RIGHT, SWT.BOTTOM, true, true, 2, 1));
+    private void addTokenButtonGroup(Composite parent) {
 
+    	Composite authButtonGroup = new Composite(parent, SWT.NONE);
+    	RowLayout rowLayout = new RowLayout();
+    	rowLayout.wrap = true;
+    	rowLayout.pack = true;
+    	rowLayout.justify = false;
+    	rowLayout.type = SWT.HORIZONTAL;
+    	
+    	authButtonGroup.setLayout(rowLayout);
+    	authButtonGroup.setLayoutData(
+                new GridData(SWT.END, SWT.CENTER, false, false, 2, 1));
+
+    	Button testConnectButton = new Button(authButtonGroup, SWT.PUSH);
+    	testConnectButton.setText(PREFERENCES_HUAWEI_TEST_TOKEN);
+    	
+    	Button resetTokenButton = new Button(authButtonGroup, SWT.PUSH);
+        resetTokenButton.setText(PREFERENCES_HUAWEI_RESET_TOKEN);
+
+        testConnectButton.addListener(SWT.Selection, new Listener() {
+        	@Override
+            public void handleEvent(Event arg0) {
+        		try {
+        			String username = usernameInput.getStringValue();
+        			String password = passwordInput.getStringValue();
+        			String domain = domainInput.getStringValue();
+        			
+        			Token token = RequestManager.getInstance().getAuthToken(true, false, regionSelection, username, password, domain);
+        			if (token!=null) {
+        				MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Test Connection", "Test Connection Success!");
+        			} else {
+        				throw new Exception("Invalid Token");
+        			}
+        		} catch (Exception e) {
+        			System.out.print(e);
+        			MessageDialog.openWarning(Display.getDefault().getActiveShell(), "Test Connection", "Test Connection Failed!");
+        			//pop up error dialog here
+        		}
+            }
+        });
+        
         resetTokenButton.addListener(SWT.Selection, new Listener() {
             @Override
             public void handleEvent(Event arg0) {
@@ -111,7 +166,7 @@ public class HuaweiPreferencePage extends FieldEditorPreferencePage
         gd.widthHint = 200;
         group.setLayoutData(gd);
     }
-
+    
     private Combo addDropdown(String id, String labelText,
             final Map<String, String> values, Composite container) {
         Label label = new Label(container, SWT.NONE);
@@ -123,14 +178,25 @@ public class HuaweiPreferencePage extends FieldEditorPreferencePage
         Combo comboDropDown = new Combo(container, SWT.READ_ONLY);
 
         int largestLength = 15;
-        for (String displayValue : values.values()) {
+        
+        Iterator it = values.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, String> pair = (Map.Entry<String, String>)it.next();
+            String displayValue = pair.getValue();
+            String displayId = pair.getKey();
+            
             comboDropDown.add(displayValue);
+            if (regionSelection==null) { // initalize selection 
+            	regionSelection=displayId;
+            	comboDropDown.select(0);;
+            }
 
             if (largestLength < displayValue.length()) {
                 largestLength = displayValue.length();
             }
-        }
 
+        }
+        
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
         String savedId = store.getString(id);
@@ -140,7 +206,10 @@ public class HuaweiPreferencePage extends FieldEditorPreferencePage
 
             if (savedIdDisplayName != null) {
                 comboDropDown.setText(savedIdDisplayName);
+                regionSelection=savedId;
             }
+        } else {
+        	store.setValue(id, regionSelection);
         }
 
         gd = new GridData();
@@ -153,6 +222,7 @@ public class HuaweiPreferencePage extends FieldEditorPreferencePage
             for (Entry<String, String> entry : values.entrySet()) {
                 if (entry.getValue().equals(displayValue)) {
                     store.putValue(id, entry.getKey());
+                    regionSelection=entry.getKey();
                     return;
                 }
             }
