@@ -263,6 +263,25 @@ public interface Resources {
 
     static final String JOB_DEPLOY_SUCCESSFUL_NO_URL = Activator
             .getResourceString("job.deploy.successfulNoUrl");
+    
+    
+    static final String PROGRESS_TASK_GET_SIZE = Activator
+            .getResourceString("monitor.task.size");
+    static final String PROGRESS_TASK_GET_ELB = Activator
+            .getResourceString("monitor.task.elb");
+    static final String PROGRESS_TASK_GET_VPC = Activator
+            .getResourceString("monitor.task.vpc");
+    static final String PROGRESS_TASK_GET_DCS = Activator
+            .getResourceString("monitor.task.dcs");
+    static final String PROGRESS_TASK_GET_RDS = Activator
+            .getResourceString("monitor.task.rds");
+    static final String PROGRESS_TASK_GET_REGIONS = Activator
+            .getResourceString("monitor.task.region");
+    static final String PROGRESS_TASK_GET_TYPE = Activator
+            .getResourceString("monitor.task.type");
+    static final String PROGRESS_TASK_GET_REPOS = Activator
+            .getResourceString("monitor.task.repos");
+
 
     // General
     static final String INFO = Activator.getResourceString("info");

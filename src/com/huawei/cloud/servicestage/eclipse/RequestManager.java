@@ -317,13 +317,16 @@ public class RequestManager {
     public void load(IProgressMonitor monitor) throws IOException {
         SubMonitor subMonitor = SubMonitor.convert(monitor, 90);
 
+        subMonitor.setTaskName(Resources.PROGRESS_TASK_GET_SIZE);
         getAppTShirtSizes();
         subMonitor.worked(10);
+        
 
         if (subMonitor.isCanceled()) {
             return;
         }
 
+        subMonitor.setTaskName(Resources.PROGRESS_TASK_GET_ELB);
         getELBs();
         subMonitor.worked(10);
 
@@ -331,6 +334,7 @@ public class RequestManager {
             return;
         }
 
+        subMonitor.setTaskName(Resources.PROGRESS_TASK_GET_VPC);
         getVPCs();
         subMonitor.worked(10);
 
@@ -338,6 +342,7 @@ public class RequestManager {
             return;
         }
 
+        subMonitor.setTaskName(Resources.PROGRESS_TASK_GET_DCS);
         getDCSInstances();
         subMonitor.worked(10);
 
@@ -345,6 +350,7 @@ public class RequestManager {
             return;
         }
 
+        subMonitor.setTaskName(Resources.PROGRESS_TASK_GET_RDS);
         getRDSInstances();
         subMonitor.worked(10);
 
@@ -352,6 +358,7 @@ public class RequestManager {
             return;
         }
 
+        subMonitor.setTaskName(Resources.PROGRESS_TASK_GET_REGIONS);
         getRegions();
         subMonitor.worked(10);
 
@@ -359,6 +366,7 @@ public class RequestManager {
             return;
         }
 
+        subMonitor.setTaskName(Resources.PROGRESS_TASK_GET_TYPE);
         getApplicationTypes();
         subMonitor.worked(10);
 
@@ -366,6 +374,7 @@ public class RequestManager {
             return;
         }
 
+        subMonitor.setTaskName(Resources.PROGRESS_TASK_GET_REPOS);
         getRepos();
         subMonitor.worked(10);
     }
