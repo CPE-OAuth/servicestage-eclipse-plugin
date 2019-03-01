@@ -431,6 +431,9 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
 			}
         });
 
+        // little trick to trigger a modify event to auto select vpc and
+        // subnet inputs based on app group selection. 
+        appGroupstype.setText(appGroupstype.getText());
 
         // app sizes
         Map<String, String> sizes = Collections.emptyMap();
