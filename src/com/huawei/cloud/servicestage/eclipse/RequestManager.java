@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -29,8 +30,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.osgi.storage.Storage.StorageException;
 
-import com.huawei.cloud.servicestage.eclipse.preferences.PreferenceConstants;
+import com.google.gson.JsonObject;
 import com.huawei.cloud.servicestage.client.AuthClient;
 import com.huawei.cloud.servicestage.client.HuaweiCloudClient;
 import com.huawei.cloud.servicestage.client.ServiceInstanceRequestBody;
@@ -38,6 +40,7 @@ import com.huawei.cloud.servicestage.client.ServiceStageClient;
 import com.huawei.cloud.servicestage.client.SimpleResponse;
 import com.huawei.cloud.servicestage.client.Token;
 import com.huawei.cloud.servicestage.client.UploadClient;
+import com.huawei.cloud.servicestage.eclipse.preferences.PreferenceConstants;
 
 /**
  * This class manages requests made to ServiceStage via the ServiceStage
@@ -61,6 +64,10 @@ public class RequestManager {
     private Map<String, String> appTShirtSizes = null;
 
     private Map<String, String> applicationTypes = null;
+    
+    private Map<String, String> applicationGroups = null; // app group base map
+    
+    private Map<String, JsonObject> applicationGroupsMetaData = null; // metadata map for vpc auto selection
 
     private Map<String, String> regions = null;
 
@@ -144,6 +151,7 @@ public class RequestManager {
         r.parameters.name = ds.get(ConfigConstants.APP_NAME);
         r.parameters.region = token.getRegion();
         r.parameters.version = ds.get(ConfigConstants.APP_VERSION);
+        r.parameters.group_id = ds.get(ConfigConstants.APP_GROUP_ID);
         r.parameters.type = ds.get(ConfigConstants.APP_TYPE_OPTION);
         r.parameters.category = ds.get(ConfigConstants.APP_CATEGORY_OPTION);
         r.parameters.platformType = "cce"; // hardcode cce for now since the
@@ -309,13 +317,16 @@ public class RequestManager {
     public void load(IProgressMonitor monitor) throws IOException {
         SubMonitor subMonitor = SubMonitor.convert(monitor, 90);
 
+        subMonitor.setTaskName(Resources.PROGRESS_TASK_GET_SIZE);
         getAppTShirtSizes();
         subMonitor.worked(10);
+        
 
         if (subMonitor.isCanceled()) {
             return;
         }
 
+        subMonitor.setTaskName(Resources.PROGRESS_TASK_GET_ELB);
         getELBs();
         subMonitor.worked(10);
 
@@ -323,6 +334,7 @@ public class RequestManager {
             return;
         }
 
+        subMonitor.setTaskName(Resources.PROGRESS_TASK_GET_VPC);
         getVPCs();
         subMonitor.worked(10);
 
@@ -330,6 +342,7 @@ public class RequestManager {
             return;
         }
 
+        subMonitor.setTaskName(Resources.PROGRESS_TASK_GET_DCS);
         getDCSInstances();
         subMonitor.worked(10);
 
@@ -337,6 +350,7 @@ public class RequestManager {
             return;
         }
 
+        subMonitor.setTaskName(Resources.PROGRESS_TASK_GET_RDS);
         getRDSInstances();
         subMonitor.worked(10);
 
@@ -344,6 +358,7 @@ public class RequestManager {
             return;
         }
 
+        subMonitor.setTaskName(Resources.PROGRESS_TASK_GET_REGIONS);
         getRegions();
         subMonitor.worked(10);
 
@@ -351,6 +366,7 @@ public class RequestManager {
             return;
         }
 
+        subMonitor.setTaskName(Resources.PROGRESS_TASK_GET_TYPE);
         getApplicationTypes();
         subMonitor.worked(10);
 
@@ -358,6 +374,7 @@ public class RequestManager {
             return;
         }
 
+        subMonitor.setTaskName(Resources.PROGRESS_TASK_GET_REPOS);
         getRepos();
         subMonitor.worked(10);
     }
@@ -668,4 +685,47 @@ public class RequestManager {
 
         return getServiceStageClient().getApplicationUrl(instanceId, token);
     }
+
+    /**
+     * Get application group list
+     * 
+     * @return a map where the keys are type group_id, and values are type
+     *         display name for the api
+     * @throws IOException
+     */
+	public Map<String, String> getAppGroups() throws IOException {
+        if (this.applicationGroups == null) {
+        	Map<String, String> map = new LinkedHashMap<>();
+        	
+        	// metadata is used for vpc auto selection
+        	this.applicationGroupsMetaData = getServiceStageClient()
+                    .getApplicationGroupsMetaData(getAuthToken()); 
+        	
+        	// build id-label map from metadata
+        	Iterator<Map.Entry<String, JsonObject>> it = applicationGroupsMetaData.entrySet().iterator();
+        	while (it.hasNext()) {
+        	    Map.Entry<String, JsonObject> entry = it.next();
+        	    
+        	    String groupId = entry.getKey();
+        	    String groupLabel = entry.getValue().get("name").getAsString();
+        	    System.out.println("Group Id = " + groupId + ", Group Label = " + groupLabel);
+        	    map.put(groupId, groupLabel);
+        	}
+        	
+            this.applicationGroups = map;
+        }
+
+        return this.applicationGroups;
+	}
+	
+	/**
+     * Get application group list
+     * 
+     * @return a map where the keys are type group_id, and values are type
+     *         display name for the api
+     * @throws IOException
+     */
+	public Map<String, JsonObject> getAppGroupsMetaData() throws IOException {
+       return this.applicationGroupsMetaData;
+	}
 }
