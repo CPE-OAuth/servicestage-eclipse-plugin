@@ -402,14 +402,11 @@ public class RequestManager {
             // hard code regions for now
             this.regions = new LinkedHashMap<>();
             this.regions.put("cn-north-1", "CN North-Beijing1");
-            this.regions.put("cn-north-5", "CN North-Ulanqab1");
-            this.regions.put("cn-north-6", "CN North-Ulanqab2");
             this.regions.put("cn-north-4", "CN North-Beijing4");
-            this.regions.put("cn-southwest-2", "CN Southwest-Guiyang1");
+            this.regions.put("cn-northeast-1", "CN Northeast-DaLian");
             this.regions.put("cn-east-2", "CN East-Shanghai2");
             this.regions.put("cn-south-1", "CN South-Guangzhou");
             this.regions.put("ap-southeast-1", "AP-Hong Kong");
-            this.regions.put("ap-southeast-2", "AP-Bangkok");
 
             // this.regions = HuaweiCloudClient.getRegions(getAuthToken());
         }
