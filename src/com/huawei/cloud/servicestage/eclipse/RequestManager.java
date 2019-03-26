@@ -30,7 +30,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.osgi.storage.Storage.StorageException;
 
 import com.google.gson.JsonObject;
 import com.huawei.cloud.servicestage.client.AuthClient;
