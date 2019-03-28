@@ -36,7 +36,7 @@ public class AuthHelper {
     private Token token = null;
 
     protected AuthHelper() throws IOException {
-        this.token = AuthClient.getAuthToken(REGION, USERNAME, PASSWORD);
+        this.token = AuthClient.getAuthToken(REGION, USERNAME, PASSWORD, null);
         assertNotNull("Failed to get Auth Token.", this.token);
     }
 

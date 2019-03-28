@@ -290,7 +290,7 @@ public class RequestManager {
         if (token == null) {
             Logger.info("No valid token found, getting new token");
 
-            token = AuthClient.getAuthToken(region, username, password);
+            token = AuthClient.getAuthToken(region, username, password, null);
             store.putValue(PreferenceConstants.TOKEN, token.toString());
         }
 

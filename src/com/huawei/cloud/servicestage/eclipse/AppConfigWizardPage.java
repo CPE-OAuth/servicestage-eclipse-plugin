@@ -391,7 +391,6 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
                         && Util.isNotEmpty(port.getText())
                         && Util.isNotEmpty(repo.getText())
                         && Util.isNotEmpty(cce.getText())
-                        && Util.isNotEmpty(elb.getText())
                         && Util.isNotEmpty(vpc.getText())
                         && Util.isNotEmpty(subnet.getText())
                         && Util.isNotEmpty(size.getText())
