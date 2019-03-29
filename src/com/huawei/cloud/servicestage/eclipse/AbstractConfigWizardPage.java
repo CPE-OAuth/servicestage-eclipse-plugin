@@ -52,14 +52,17 @@ public abstract class AbstractConfigWizardPage extends WizardPage {
     }
 
     protected Composite createContainer(Composite parent) {
+    	return createContainer(parent,null);
+    }
+    	
+   	protected Composite createContainer(Composite parent, Composite control) {	
         Composite container = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
         layout.numColumns = 1;
         container.setLayout(layout);
-        setControl(container);
-
+        setControl(control==null?container:control);
         return container;
-    }
+   	}
 
     protected Group createGroup(Composite parent) {
         return createGroup(parent, "");
