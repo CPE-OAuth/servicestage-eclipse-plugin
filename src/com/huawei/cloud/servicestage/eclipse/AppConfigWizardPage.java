@@ -27,7 +27,10 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -57,8 +60,18 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
 
     @Override
     public void createControl(Composite parent) {
+        // create a plain container for scrolledcomposite.
+        final Composite rootComposite = new Composite(parent, SWT.NONE);
+        rootComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        
+        final ScrolledComposite sc = new ScrolledComposite(rootComposite, SWT.V_SCROLL);
+        sc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(600, SWT.DEFAULT).create());
+        sc.setExpandHorizontal(true);
+        sc.setExpandVertical(true);
+
         // outer container
-        Composite container = createContainer(parent);
+        Composite container = createContainer(sc,rootComposite); //assign scrolled parent as wizardpage control     
+
         this.setPageComplete(false);
 
         //
@@ -495,6 +508,9 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         // little trick to trigger a modify for the first time the page is
         // opened
         name.setText(name.getText());
+        
+        sc.setContent(container);
+        sc.setMinSize(container.computeSize(SWT.DEFAULT, SWT.DEFAULT));
     }
 
     @Override
