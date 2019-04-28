@@ -31,12 +31,14 @@ public class AuthHelper {
 
     public static final String TENANT_ID = "";
 
+    public static final String DOMAIN = "";
+
     private static AuthHelper instance = null;
 
     private Token token = null;
 
     protected AuthHelper() throws IOException {
-        this.token = AuthClient.getAuthToken(REGION, USERNAME, PASSWORD, null);
+        this.token = AuthClient.getAuthToken(REGION, USERNAME, PASSWORD, DOMAIN);
         assertNotNull("Failed to get Auth Token.", this.token);
     }
 
