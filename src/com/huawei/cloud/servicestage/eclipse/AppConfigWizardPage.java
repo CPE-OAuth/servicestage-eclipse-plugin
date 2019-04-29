@@ -15,9 +15,11 @@
  */
 package com.huawei.cloud.servicestage.eclipse;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -56,17 +58,23 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
 
     @Override
     public void createControl(Composite parent) {
-    	// create a plain container for scrolledcomposite.
-    	final Composite rootComposite = new Composite(parent, SWT.NONE);
-		rootComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-		
-		final ScrolledComposite sc = new ScrolledComposite(rootComposite, SWT.V_SCROLL);
-		sc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(600, SWT.DEFAULT).create());
-		sc.setExpandHorizontal(true);
-		sc.setExpandVertical(true);
+        // create a plain container for scrolledcomposite.
+        final Composite rootComposite = new Composite(parent, SWT.NONE);
+        rootComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+
+        final ScrolledComposite sc = new ScrolledComposite(rootComposite,
+                SWT.V_SCROLL);
+        sc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true)
+                .hint(600, SWT.DEFAULT).create());
+        sc.setExpandHorizontal(true);
+        sc.setExpandVertical(true);
 
         // outer container
-        Composite container = createContainer(sc,rootComposite); //assign scrolled parent as wizardpage control    	
+        Composite container = createContainer(sc, rootComposite); // assign
+                                                                  // scrolled
+                                                                  // parent as
+                                                                  // wizardpage
+                                                                  // control
 
         this.setPageComplete(false);
 
@@ -187,7 +195,8 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
                 ConfigConstants.APP_CATEGORY_MOBILE);
 
         Combo category = addDropdown(ConfigConstants.APP_CATEGORY_OPTION,
-                WIZARD_APP_PAGE_APP_CATEGORY, categories, false, true, appGroup);
+                WIZARD_APP_PAGE_APP_CATEGORY, categories, false, true,
+                appGroup);
 
         if (category.getText() == null || category.getText().isEmpty()) {
             category.setText(ConfigConstants.APP_CATEGORY_WEBAPP);
@@ -207,18 +216,52 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         getDialogSettings().put(ConfigConstants.SOURCE_TYPE_OPTION,
                 ConfigConstants.SOURCE_TYPE_LOCAL_FILE);
 
-        // repo where binary will be uploaded
-        Set<String> repos = Collections.emptySet();
+        // swr namespace where binary will be uploaded
+        Set<String> swrNamespaces = Collections.emptySet();
         try {
-            repos = this.getRequestManger().getRepos();
+            swrNamespaces = this.getRequestManger().getNamespaces();
+        } catch (Exception e) {
+            this.setErrorMessage(WIZARD_APP_PAGE_SWR_NAMESPACE_ERROR);
+            Util.showJobExceptionDialog(WIZARD_APP_PAGE_SWR_NAMESPACE_ERROR,
+                    parent.getShell(), e);
+        }
+
+        Combo swrNamespace = addDropdown(ConfigConstants.SWR_NAMESPACE,
+                WIZARD_SRC_PAGE_SWR_NAMESPACE, swrNamespaces, false, true,
+                localGroup);
+
+        // repo where binary will be uploaded
+        final Set<String> swrRepos = new LinkedHashSet<>();
+        try {
+            if (!Util.isEmpty(swrNamespace.getText())) {
+                swrRepos.clear();
+                swrRepos.addAll(this.getRequestManger()
+                        .getRepos(swrNamespace.getText()));
+            }
         } catch (Exception e) {
             this.setErrorMessage(WIZARD_APP_PAGE_SWR_REPO_ERROR);
             Util.showJobExceptionDialog(WIZARD_APP_PAGE_SWR_REPO_ERROR,
                     parent.getShell(), e);
         }
 
-        Combo repo = addDropdown(ConfigConstants.SWR_REPO,
-                WIZARD_SRC_PAGE_SWR_REPO, repos, false, true, localGroup);
+        Combo swrRepo = addDropdown(ConfigConstants.SWR_REPO,
+                WIZARD_SRC_PAGE_SWR_REPO, swrRepos, false, true, localGroup);
+
+        swrNamespace.addModifyListener(e -> {
+            swrRepos.clear();
+            swrRepo.removeAll();
+            try {
+                swrRepos.addAll(this.getRequestManger()
+                        .getRepos(swrNamespace.getText()));
+                for (String r : swrRepos) {
+                    swrRepo.add(r);
+                }
+            } catch (IOException err) {
+                this.setErrorMessage(WIZARD_APP_PAGE_SWR_REPO_ERROR);
+                Util.showJobExceptionDialog(WIZARD_APP_PAGE_SWR_REPO_ERROR,
+                        parent.getShell(), err);
+            }
+        });
 
         //
         // platform group
@@ -402,7 +445,8 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
                         && Util.isNotEmpty(type.getText())
                         && Util.isNotEmpty(category.getText())
                         && Util.isNotEmpty(port.getText())
-                        && Util.isNotEmpty(repo.getText())
+                        && Util.isNotEmpty(swrNamespace.getText())
+                        && Util.isNotEmpty(swrRepo.getText())
                         && Util.isNotEmpty(cce.getText())
                         && Util.isNotEmpty(elb.getText())
                         && Util.isNotEmpty(vpc.getText())
@@ -423,7 +467,8 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         type.addListener(SWT.Modify, listener);
         category.addListener(SWT.Modify, listener);
         port.addListener(SWT.Modify, listener);
-        repo.addListener(SWT.Modify, listener);
+        swrNamespace.addListener(SWT.Modify, listener);
+        swrRepo.addListener(SWT.Modify, listener);
         cce.addListener(SWT.Modify, listener);
         elb.addListener(SWT.Modify, listener);
         vpc.addListener(SWT.Modify, listener);
@@ -434,9 +479,9 @@ public class AppConfigWizardPage extends AbstractConfigWizardPage
         // little trick to trigger a modify for the first time the page is
         // opened
         name.setText(name.getText());
-        
+
         sc.setContent(container);
-		sc.setMinSize(container.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+        sc.setMinSize(container.computeSize(SWT.DEFAULT, SWT.DEFAULT));
     }
 
     @Override

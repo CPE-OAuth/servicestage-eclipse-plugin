@@ -131,6 +131,12 @@ public interface Resources {
     static final String WIZARD_SRC_PAGE_SWR_GROUP_NAME = Activator
             .getResourceString("wizard.srcPage.swrGroupName");
 
+    static final String WIZARD_SRC_PAGE_SWR_NAMESPACE = Activator
+            .getResourceString("wizard.srcPage.swrNamespace");
+
+    static final String WIZARD_APP_PAGE_SWR_NAMESPACE_ERROR = Activator
+            .getResourceString("wizard.appPage.swrNamespaceError");
+
     static final String WIZARD_SRC_PAGE_SWR_REPO = Activator
             .getResourceString("wizard.srcPage.swrRepo");
 

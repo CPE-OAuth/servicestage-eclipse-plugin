@@ -74,7 +74,7 @@ public class RequestManager {
 
     private Map<String, String> ccseClusters = null;
 
-    private Set<String> repos = null;
+    private Set<String> swrNamespaces = null;
 
     public RequestManager() {
     }
@@ -350,7 +350,7 @@ public class RequestManager {
             return;
         }
 
-        getRepos();
+        getNamespaces();
         subMonitor.worked(10);
     }
 
@@ -471,21 +471,34 @@ public class RequestManager {
     }
 
     /**
+     * Gets a set of swr namespaces available to the user
+     * 
+     * @return
+     * @throws IOException
+     * @throws StorageException
+     */
+    public Set<String> getNamespaces() throws IOException {
+        if (this.swrNamespaces == null) {
+            Token token = getAuthToken();
+            String domain = token.getDomain();
+            this.swrNamespaces = new UploadClient().getNamespaces(domain,
+                    token);
+        }
+
+        return this.swrNamespaces;
+    }
+
+    /**
      * Gets a set of repos for the user
      * 
      * @return
      * @throws IOException
      * @throws StorageException
      */
-    public Set<String> getRepos() throws IOException {
-        if (this.repos == null) {
-            Token token = getAuthToken();
-            String domain = token.getDomain();
-            String namespace = domain; // hardcode the namespace using domain
-            this.repos = new UploadClient().getRepos(domain, namespace, token);
-        }
-
-        return this.repos;
+    public Set<String> getRepos(String namespace) throws IOException {
+        Token token = getAuthToken();
+        String domain = token.getDomain();
+        return  new UploadClient().getRepos(domain, namespace, token);
     }
 
     /**
@@ -544,10 +557,10 @@ public class RequestManager {
         String name = new File(localAbsoluteFilePath).getName();
 
         String domain = token.getDomain();
-        String namespace = domain; // hard-coded domain as the namespace for now
 
         IDialogSettings ds = Util.loadDialogSettings(project);
 
+        String namespace = ds.get(ConfigConstants.SWR_NAMESPACE);
         String repo = ds.get(ConfigConstants.SWR_REPO);
         // String packageName = ds.get(ConfigConstants.APP_NAME);
         String packageName = project.getName().replaceAll("[^A-Za-z0-9]", "");

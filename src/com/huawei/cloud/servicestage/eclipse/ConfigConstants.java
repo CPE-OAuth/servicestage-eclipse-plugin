@@ -89,6 +89,8 @@ public class ConfigConstants {
 
     public static final String SWR_REPO = "swr_repo";
 
+    public static final String SWR_NAMESPACE = "swr_namespace";
+
     public static final String DIALOG_SETTINGS_FILE_NAME = "servicestage.xml";
 
     public static final String RDB_ID = "services.relational_database.id";
