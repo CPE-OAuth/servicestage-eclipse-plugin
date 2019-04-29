@@ -269,6 +269,7 @@ public class RequestManager {
         String region = store.getString(PreferenceConstants.REGION_CHOICE);
         String username = store.getString(PreferenceConstants.USERNAME);
         String password = store.getString(PreferenceConstants.PASSWORD);
+        String domain = store.getString(PreferenceConstants.DOMAIN);
 
         // get existing token, if any
         String tokenStr = store.getString(PreferenceConstants.TOKEN);
@@ -290,7 +291,7 @@ public class RequestManager {
         if (token == null) {
             Logger.info("No valid token found, getting new token");
 
-            token = AuthClient.getAuthToken(region, username, password, null);
+            token = AuthClient.getAuthToken(region, username, password, domain);
             store.putValue(PreferenceConstants.TOKEN, token.toString());
         }
 
@@ -479,8 +480,8 @@ public class RequestManager {
     public Set<String> getRepos() throws IOException {
         if (this.repos == null) {
             Token token = getAuthToken();
-            String domain = token.getUsername();
-            String namespace = domain; // hardcode the namespace using username
+            String domain = token.getDomain();
+            String namespace = domain; // hardcode the namespace using domain
             this.repos = new UploadClient().getRepos(domain, namespace, token);
         }
 
@@ -497,7 +498,7 @@ public class RequestManager {
      */
     public Set<String> getPackages(String repo) throws IOException {
         Token token = getAuthToken();
-        String domain = token.getUsername();
+        String domain = token.getDomain();
         String namespace = domain;
         return new UploadClient().getPackages(domain, namespace, repo, token);
     }
@@ -514,7 +515,7 @@ public class RequestManager {
     public Set<String> getVersions(String repo, String packageName)
             throws IOException {
         Token token = getAuthToken();
-        String domain = token.getUsername();
+        String domain = token.getDomain();
         String namespace = domain;
         return new UploadClient().getVersions(domain, namespace, repo,
                 packageName, token);
@@ -542,7 +543,7 @@ public class RequestManager {
 
         String name = new File(localAbsoluteFilePath).getName();
 
-        String domain = token.getUsername();
+        String domain = token.getDomain();
         String namespace = domain; // hard-coded domain as the namespace for now
 
         IDialogSettings ds = Util.loadDialogSettings(project);

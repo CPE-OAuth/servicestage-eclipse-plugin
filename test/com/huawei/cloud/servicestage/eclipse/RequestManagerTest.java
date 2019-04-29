@@ -70,7 +70,7 @@ public class RequestManagerTest {
     public void testGetExistingValidAuthToken() throws IOException {
         // add test token that expires in 2099
         String testTokenValue = "testToken";
-        Token token = new Token(AuthHelper.USERNAME, AuthHelper.REGION,
+        Token token = new Token(AuthHelper.DOMAIN, AuthHelper.USERNAME, AuthHelper.REGION,
                 testTokenValue, AuthHelper.TENANT_ID,
                 Util.stringToDate("2099-08-23T21:40:09.922000Z"));
 

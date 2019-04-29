@@ -33,6 +33,9 @@ public interface Resources {
 
     static final String PREFERENCES_HUAWEI_PASSWORD = Activator
             .getResourceString("preferences.huawei.password");
+    
+    static final String PREFERENCES_HUAWEI_DOMAIN = Activator
+            .getResourceString("preferences.huawei.domain");
 
     static final String PREFERENCES_HUAWEI_RESET_TOKEN = Activator
             .getResourceString("preferences.huawei.resetToken");

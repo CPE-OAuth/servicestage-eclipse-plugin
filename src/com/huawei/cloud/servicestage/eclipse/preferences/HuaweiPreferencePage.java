@@ -82,6 +82,8 @@ public class HuaweiPreferencePage extends FieldEditorPreferencePage
                 PREFERENCES_HUAWEI_USERNAME, authenticationGroup));
         addField(new PasswordFieldEditor(PreferenceConstants.PASSWORD,
                 PREFERENCES_HUAWEI_PASSWORD, authenticationGroup));
+        addField(new StringFieldEditor(PreferenceConstants.DOMAIN,
+        		PREFERENCES_HUAWEI_DOMAIN, authenticationGroup));
 
         addResetTokenButton(authenticationGroup);
     }
